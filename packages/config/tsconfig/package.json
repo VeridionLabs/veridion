@@ -1,0 +1,12 @@
+{
+  "name": "@veridion/tsconfig",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared TypeScript configuration for Veridion",
+  "exports": {
+    "./base.json": "./base.json",
+    "./nextjs.json": "./nextjs.json",
+    "./nestjs.json": "./nestjs.json",
+    "./react-library.json": "./react-library.json"
+  }
+}

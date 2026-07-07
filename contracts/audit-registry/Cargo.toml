@@ -1,0 +1,20 @@
+[package]
+name = "veridion-audit-registry"
+version = "0.1.0"
+edition = "2021"
+description = "Stellar Soroban contract for immutable audit registration and verification"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+soroban-sdk = "21.0.1"
+
+[dev-dependencies]
+soroban-sdk = { version = "21.0.1", features = ["testutils"] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true

@@ -1,0 +1,248 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---- Authentication & Users ----
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  displayName   String?
+  avatarUrl     String?
+  walletAddress String?
+  role          String    @default("USER")
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  projects       Project[]
+  sessions       Session[]
+  apiKeys        ApiKey[]
+  notifications  Notification[]
+  orgMemberships OrganizationMember[]
+  auditFindings  AuditFinding[]
+
+  @@index([email])
+  @@index([walletAddress])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  token        String   @unique
+  refreshToken String   @unique
+  expiresAt    DateTime
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model ApiKey {
+  id          String    @id @default(uuid())
+  userId      String
+  name        String
+  key         String    @unique
+  permissions String[]
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([key])
+}
+
+// ---- Organizations ----
+
+model Organization {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  logoUrl     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  members  OrganizationMember[]
+  projects Project[]
+}
+
+model OrganizationMember {
+  id             String   @id @default(uuid())
+  userId         String
+  organizationId String
+  role           String   @default("MEMBER")
+  joinedAt       DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+}
+
+// ---- Projects ----
+
+model Project {
+  id               String   @id @default(uuid())
+  name             String
+  description      String?
+  repoUrl          String?
+  chain            String
+  language         String
+  userId           String
+  organizationId   String?
+  contractCount    Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  contracts    Contract[]
+  audits       Audit[]
+
+  @@index([userId])
+  @@index([organizationId])
+}
+
+model Contract {
+  id             String   @id @default(uuid())
+  projectId      String
+  name           String
+  filePath       String
+  sourceCode     String
+  language       String
+  compilerVersion String?
+  hash           String
+  lineCount      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([hash])
+}
+
+// ---- Audits ----
+
+model Audit {
+  id             String    @id @default(uuid())
+  projectId      String
+  status         String    @default("PENDING")
+  commitHash     String?
+  securityScore  Int?
+  reportHash     String?
+  reportUrl      String?
+  transactionHash String?
+  chainStatus    String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  error          String?
+  metadata       Json?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  project  Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  findings AuditFinding[]
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model AuditFinding {
+  id             String   @id @default(uuid())
+  auditId        String
+  pluginId       String
+  title          String
+  description    String
+  severity       String
+  filePath       String
+  lineStart      Int
+  lineEnd        Int
+  codeSnippet    String?
+  recommendation String?
+  aiSummary      String?
+  confidence     Float    @default(1.0)
+  references     Json?
+  status         String   @default("OPEN")
+  assignedToId    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  audit      Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  assignedTo User? @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  @@index([auditId])
+  @@index([pluginId])
+  @@index([severity])
+}
+
+// ---- Plugins ----
+
+model ScannerPlugin {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  displayName String
+  version     String
+  description String
+  severity    String
+  category    String
+  chains      String[]
+  languages   String[]
+  tags        String[]
+  isEnabled   Boolean  @default(true)
+  config      Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ---- Notifications ----
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String    @default("INFO")
+  read      Boolean   @default(false)
+  link      String?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+}
+
+// ---- Audit Log ----
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([action])
+  @@index([createdAt])
+}

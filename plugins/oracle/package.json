@@ -1,0 +1,22 @@
+{
+  "name": "@veridion/plugin-oracle",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Oracle manipulation detection plugin",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@veridion/scanner-types": "workspace:*",
+    "@veridion/shared": "workspace:*",
+    "@veridion/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@veridion/tsconfig": "workspace:*",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,29 @@
+# Global code owners
+* @veridion/core
+
+# Package-specific owners
+packages/config/          @veridion/core
+packages/shared/          @veridion/core
+packages/database/        @veridion/core
+packages/auth/            @veridion/core
+packages/logger/          @veridion/core
+packages/scanner-types/   @veridion/core
+packages/scanner-core/    @veridion/core
+packages/ai-engine/       @veridion/core
+packages/parser/          @veridion/core
+packages/report-generator/ @veridion/core
+packages/sdk/             @veridion/core
+
+# Plugins
+plugins/                  @veridion/plugins
+
+# Apps
+apps/api/                 @veridion/backend
+apps/web/                 @veridion/frontend
+
+# Contracts
+contracts/                @veridion/blockchain
+
+# CI/CD
+.github/                  @veridion/ci
+docker/                   @veridion/ci

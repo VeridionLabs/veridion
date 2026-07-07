@@ -1,0 +1,82 @@
+{
+  "name": "veridion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-powered smart contract security platform with on-chain audit verification",
+  "keywords": [
+    "smart-contract",
+    "security",
+    "audit",
+    "ai",
+    "blockchain",
+    "stellar",
+    "soroban",
+    "solidity",
+    "web3"
+  ],
+  "homepage": "https://github.com/veridion/veridion#readme",
+  "bugs": {
+    "url": "https://github.com/veridion/veridion/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/veridion/veridion.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Veridion Contributors",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.1.0",
+  "scripts": {
+    "dev": "turbo dev --parallel",
+    "dev:web": "turbo dev --filter=@veridion/web",
+    "dev:api": "turbo dev --filter=@veridion/api",
+    "dev:docs": "turbo dev --filter=@veridion/docs",
+    "build": "turbo build",
+    "build:web": "turbo build --filter=@veridion/web",
+    "build:api": "turbo build --filter=@veridion/api",
+    "build:packages": "turbo build --filter='./packages/*'",
+    "typecheck": "turbo typecheck",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "test": "turbo test",
+    "test:watch": "turbo test:watch",
+    "test:coverage": "turbo test:coverage",
+    "clean": "turbo clean && rm -rf node_modules .turbo",
+    "db:generate": "turbo db:generate",
+    "db:migrate": "turbo db:migrate --filter=@veridion/database",
+    "db:push": "turbo db:push --filter=@veridion/database",
+    "db:seed": "turbo db:seed --filter=@veridion/database",
+    "db:studio": "turbo db:studio --filter=@veridion/database",
+    "prepare": "husky || true",
+    "commitlint": "commitlint --edit",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo build --filter='./packages/*' && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "turbo": "^2.0.4",
+    "typescript": "^5.4.5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 0"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@veridion/logger",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Structured logging for Veridion services",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ --max-warnings 0",
+    "lint:fix": "eslint src/ --fix",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "pino": "^9.1.0",
+    "pino-pretty": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@veridion/tsconfig": "workspace:*",
+    "typescript": "^5.4.5"
+  }
+}

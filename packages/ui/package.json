@@ -1,0 +1,31 @@
+{
+  "name": "@veridion/ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared UI components for Veridion (shadcn/ui)",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ --max-warnings 0",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
+    "@veridion/shared": "workspace:*",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@veridion/tsconfig": "workspace:*",
+    "react": "^18.3.1",
+    "typescript": "^5.4.5"
+  }
+}
