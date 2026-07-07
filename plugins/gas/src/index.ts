@@ -56,7 +56,7 @@ export class GasPlugin implements IRulePlugin {
     }
 
     // ++i vs i++
-    if (/\bi\+\+\b/.test(context.sourceCode)) {
+    if (/\bi\+\+/.test(context.sourceCode)) {
       findings.push({
         pluginId: this.metadata.id,
         title: 'Use ++i Instead of i++',

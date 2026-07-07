@@ -12,6 +12,8 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/ --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -19,6 +21,7 @@
   },
   "devDependencies": {
     "@veridion/tsconfig": "workspace:*",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   }
 }

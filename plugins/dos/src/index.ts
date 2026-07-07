@@ -23,7 +23,7 @@ export class DosPlugin implements IRulePlugin {
 
     // Unbounded loops over dynamic arrays
     if (/\bfor\s*\(/.test(context.sourceCode)) {
-      const loopRegex = /\bfor\s*\(\s*uint[\s\d]+\s+\w+\s*=\s*0\s*;\s*\w+\s*<\s*(\w+)\.length/g;
+      const loopRegex = /\bfor\s*\(\s*uint\d*\s+\w+\s*=\s*0\s*;\s*\w+\s*<\s*(\w+)\.length/g;
       let match;
       while ((match = loopRegex.exec(context.sourceCode)) !== null) {
         findings.push({
