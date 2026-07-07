@@ -22,11 +22,11 @@
     "@veridion/database": "workspace:*",
     "@veridion/logger": "workspace:*",
     "@veridion/shared": "workspace:*",
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
+    "@types/bcryptjs": "^3.0.0",
     "@types/jsonwebtoken": "^9.0.6",
     "@veridion/tsconfig": "workspace:*",
     "typescript": "^5.4.5",
