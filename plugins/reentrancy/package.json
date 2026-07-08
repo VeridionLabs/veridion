@@ -21,6 +21,6 @@
   "devDependencies": {
     "@veridion/tsconfig": "workspace:*",
     "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "vitest": "^4.1.10"
   }
 }
