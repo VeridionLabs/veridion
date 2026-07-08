@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { cn, formatDate, formatAddress, severityColor } from './utils';
+import { describe, expect, it } from 'vitest';
+
+import { cn, formatAddress, severityColor } from './utils';
 
 describe('cn', () => {
   it('should merge class names', () => {

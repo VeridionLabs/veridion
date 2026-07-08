@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import type { IRulePlugin, PluginMetadata, AnalysisContext, FindingResult } from './index';
 import { FindingSeverity } from '@veridion/shared';
+import { describe, expect, it } from 'vitest';
+
+import type { AnalysisContext, FindingResult, IRulePlugin, PluginMetadata } from './index';
 
 describe('Scanner Types', () => {
   it('should allow valid PluginMetadata construction', () => {
@@ -33,10 +34,19 @@ describe('Scanner Types', () => {
         tags: ['test'],
       };
 
-      async initialize() {}
-      async analyze(_ctx: AnalysisContext): Promise<FindingResult[]> { return []; }
-      getFixRecommendation(_: FindingResult): string { return ''; }
-      supportsContext(ctx: AnalysisContext): boolean { return true; }
+      async initialize() {
+        // noop
+      }
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async analyze(_ctx: AnalysisContext): Promise<FindingResult[]> {
+        return [];
+      }
+      getFixRecommendation(_finding: FindingResult): string {
+        return '';
+      }
+      supportsContext(_ctx: AnalysisContext): boolean {
+        return true;
+      }
     }
 
     const plugin = new TestPlugin();

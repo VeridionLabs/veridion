@@ -1,5 +1,5 @@
-import type { PluginMetadata, IRulePlugin, AnalysisContext } from '@veridion/scanner-types';
 import { logger } from '@veridion/logger';
+import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 
 export class PluginRegistry {
   private plugins = new Map<string, IRulePlugin>();
@@ -9,7 +9,10 @@ export class PluginRegistry {
       logger.warn({ pluginId: plugin.metadata.id }, 'Plugin already registered, overwriting');
     }
     this.plugins.set(plugin.metadata.id, plugin);
-    logger.info({ pluginId: plugin.metadata.id, version: plugin.metadata.version }, 'Plugin registered');
+    logger.info(
+      { pluginId: plugin.metadata.id, version: plugin.metadata.version },
+      'Plugin registered',
+    );
   }
 
   registerAll(plugins: IRulePlugin[]): void {
@@ -31,22 +34,28 @@ export class PluginRegistry {
   }
 
   getByCategory(category: string): IRulePlugin[] {
-    return this.getAll().filter((p) => p.metadata.category === category);
+    return this.getAll().filter(
+      (p) => p.metadata.category === (category as PluginMetadata['category']),
+    );
   }
 
   getBySeverity(severity: string): IRulePlugin[] {
-    return this.getAll().filter((p) => p.metadata.severity === severity);
+    return this.getAll().filter(
+      (p) => p.metadata.severity === (severity as PluginMetadata['severity']),
+    );
   }
 
   getByChain(chain: string): IRulePlugin[] {
-    return this.getAll().filter((p) => p.supportsContext({
-      contractName: '',
-      sourceCode: '',
-      chain,
-      language: '',
-      compilerVersion: null,
-      metadata: {},
-    }));
+    return this.getAll().filter((p) =>
+      p.supportsContext({
+        contractName: '',
+        sourceCode: '',
+        chain,
+        language: '',
+        compilerVersion: null,
+        metadata: {},
+      }),
+    );
   }
 
   getMatchingPlugins(context: AnalysisContext): IRulePlugin[] {

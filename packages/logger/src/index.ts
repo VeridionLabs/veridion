@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-named-as-default
 import pino from 'pino';
 
 export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';

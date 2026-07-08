@@ -1,8 +1,8 @@
 'use client';
 
+import { Eye, EyeOff, Lock, Mail, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Shield, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -16,8 +16,8 @@ export default function LoginPage() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    const _email = formData.get('email') as string;
+    const _password = formData.get('password') as string;
 
     // TODO: Replace with actual API call
     await new Promise((r) => setTimeout(r, 800));
@@ -27,27 +27,30 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
+    <div className="bg-muted/30 flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2">
-            <Shield className="h-10 w-10 text-primary" />
+            <Shield className="text-primary h-10 w-10" />
             <span className="text-3xl font-bold">Veridion</span>
           </Link>
           <h2 className="mt-6 text-2xl font-bold tracking-tight">Welcome back</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to your account to continue
-          </p>
+          <p className="text-muted-foreground mt-2 text-sm">Sign in to your account to continue</p>
         </div>
 
-        <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="bg-card rounded-xl border p-6 shadow-sm">
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(e);
+            }}
+            className="space-y-5"
+          >
             <div>
               <label htmlFor="email" className="text-sm font-medium">
                 Email address
               </label>
               <div className="relative mt-1.5">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Mail className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
                 <input
                   id="email"
                   name="email"
@@ -55,7 +58,7 @@ export default function LoginPage() {
                   autoComplete="email"
                   required
                   placeholder="you@example.com"
-                  className="w-full rounded-lg border bg-background py-2 pl-10 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="bg-background placeholder:text-muted-foreground focus:ring-ring w-full rounded-lg border py-2 pl-10 pr-3 text-sm focus:outline-none focus:ring-2"
                 />
               </div>
             </div>
@@ -67,13 +70,13 @@ export default function LoginPage() {
                 </label>
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-muted-foreground hover:text-primary"
+                  className="text-muted-foreground hover:text-primary text-xs"
                 >
                   Forgot password?
                 </Link>
               </div>
               <div className="relative mt-1.5">
-                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Lock className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
                 <input
                   id="password"
                   name="password"
@@ -82,12 +85,12 @@ export default function LoginPage() {
                   required
                   minLength={8}
                   placeholder="Enter your password"
-                  className="w-full rounded-lg border bg-background py-2 pl-10 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="bg-background placeholder:text-muted-foreground focus:ring-ring w-full rounded-lg border py-2 pl-10 pr-10 text-sm focus:outline-none focus:ring-2"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -97,15 +100,15 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg px-4 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-muted-foreground">
+          <div className="text-muted-foreground mt-6 text-center text-sm">
             Don&apos;t have an account?{' '}
-            <Link href="/register" className="font-medium text-primary hover:underline">
+            <Link href="/register" className="text-primary font-medium hover:underline">
               Create one
             </Link>
           </div>

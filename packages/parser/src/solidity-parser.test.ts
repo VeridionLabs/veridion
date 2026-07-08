@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { SolidityParser } from './solidity-parser';
 
 describe('SolidityParser', () => {
@@ -46,6 +47,7 @@ contract SimpleStorage is Ownable {
   it('should parse imports', () => {
     const result = parser.parse(simpleContract, 'SimpleStorage');
     expect(result.imports.length).toBeGreaterThan(0);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(result.imports[0]!.path).toContain('Ownable');
   });
 

@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { calculateScore, slugify, formatAddress } from './index';
+import { describe, expect, it } from 'vitest';
+
 import { FindingSeverity } from '../enums';
+import { calculateScore, formatAddress, slugify } from './index';
 
 describe('calculateScore', () => {
   it('should return 100 for no findings', () => {

@@ -1,6 +1,6 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { prisma } from '@veridion/database';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import type { PrismaClient } from '@prisma/client';
+import { prisma } from '@veridion/database';
 import { logger } from '@veridion/logger';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   private readonly client: PrismaClient;
 
   constructor() {
-    this.client = prisma as PrismaClient;
+    this.client = prisma;
   }
 
   get db(): PrismaClient {

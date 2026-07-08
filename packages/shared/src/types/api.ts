@@ -1,4 +1,3 @@
-import type { AuditFinding } from './models';
 import type { AuditStatus } from '../enums';
 
 // ---- Pagination ----

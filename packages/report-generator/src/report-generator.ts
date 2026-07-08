@@ -1,6 +1,5 @@
-import type { AuditFinding } from '@veridion/shared';
-import { ReportFormat } from '@veridion/shared';
 import { logger } from '@veridion/logger';
+import type { AuditFinding, ReportFormat } from '@veridion/shared';
 
 export interface ReportData {
   auditId: string;

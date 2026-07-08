@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
 import { logger } from '@veridion/logger';
+
+import { PrismaService } from '../../common/prisma/prisma.service';
 import type { AiChatDto } from './dto/ai.dto';
 
 @Injectable()

@@ -1,11 +1,17 @@
 import { FindingSeverity } from '@veridion/shared';
-import type { IRulePlugin, PluginMetadata, AnalysisContext, FindingResult } from '@veridion/scanner-types';
+import type {
+  IRulePlugin,
+  PluginMetadata,
+  AnalysisContext,
+  FindingResult,
+} from '@veridion/scanner-types';
 
 const metadata: PluginMetadata = {
   id: 'dos',
   name: 'Denial of Service Detector',
   version: '1.0.0',
-  description: 'Detects patterns vulnerable to Denial of Service attacks including unbounded loops, external call failures, and gas griefing.',
+  description:
+    'Detects patterns vulnerable to Denial of Service attacks including unbounded loops, external call failures, and gas griefing.',
   severity: FindingSeverity.HIGH,
   category: 'DOS',
   chains: ['ethereum', 'polygon', 'bsc', 'avalanche', 'arbitrum', 'optimism'],
@@ -35,7 +41,8 @@ export class DosPlugin implements IRulePlugin {
           lineStart: 1,
           lineEnd: 1,
           codeSnippet: match[0],
-          recommendation: 'Add a maximum limit to array size or use pull-over-push pattern for payments.',
+          recommendation:
+            'Add a maximum limit to array size or use pull-over-push pattern for payments.',
           confidence: 0.7,
           references: [],
         });
@@ -52,13 +59,15 @@ export class DosPlugin implements IRulePlugin {
           findings.push({
             pluginId: this.metadata.id,
             title: 'Unchecked External Call',
-            description: 'External call result not checked. Failed calls could silently revert or cause unexpected behavior.',
+            description:
+              'External call result not checked. Failed calls could silently revert or cause unexpected behavior.',
             severity: FindingSeverity.MEDIUM,
             filePath: `${context.contractName}.sol`,
             lineStart: 1,
             lineEnd: 1,
             codeSnippet: callMatch[0],
-            recommendation: 'Check the return value of external calls with require(success, "call failed").',
+            recommendation:
+              'Check the return value of external calls with require(success, "call failed").',
             confidence: 0.8,
             references: [],
           });

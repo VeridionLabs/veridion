@@ -1,3 +1,3 @@
-export * from './types';
-export * from './solidity-parser';
 export * from './extractor';
+export * from './solidity-parser';
+export * from './types';

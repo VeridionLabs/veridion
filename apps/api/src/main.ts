@@ -1,10 +1,10 @@
-import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { logger } from '@veridion/logger';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
-import { logger } from '@veridion/logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

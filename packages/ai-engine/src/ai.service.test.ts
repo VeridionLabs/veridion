@@ -1,14 +1,32 @@
-import { describe, it, expect } from 'vitest';
-import { AiService } from './ai.service';
+/* eslint-disable @typescript-eslint/require-await */
+import { describe, expect, it } from 'vitest';
+
 import type { AiProvider } from './ai.service';
+import { AiService } from './ai.service';
 
 const mockProvider: AiProvider = {
   name: 'mock',
-  analyze: async () => ({ summary: 'OK', riskScore: 50, recommendations: [], gasOptimizations: [], codeQualityIssues: [] }),
-  chat: async () => ({ role: 'assistant', content: 'Hello' }),
-  explainVulnerability: async () => ({ explanation: 'Test', impact: '', remediation: '', codeExample: '' }),
+  analyze: async () => ({
+    summary: 'OK',
+    riskScore: 50,
+    recommendations: [],
+    gasOptimizations: [],
+    codeQualityIssues: [],
+  }),
+  chat: async () => ({ role: 'assistant' as const, content: 'Hello' }),
+  explainVulnerability: async () => ({
+    explanation: 'Test',
+    impact: '',
+    remediation: '',
+    codeExample: '',
+  }),
   suggestFix: async () => ({ fixedCode: '// fixed', explanation: '', tradeoffs: [] }),
-  generateReportSummary: async () => ({ executiveSummary: 'Summary', detailedFindings: '', recommendations: '', riskAssessment: '' }),
+  generateReportSummary: async () => ({
+    executiveSummary: 'Summary',
+    detailedFindings: '',
+    recommendations: '',
+    riskAssessment: '',
+  }),
 };
 
 describe('AiService', () => {

@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { ReentrancyPlugin } from './index';
 
 describe('ReentrancyPlugin', () => {
@@ -11,14 +12,16 @@ describe('ReentrancyPlugin', () => {
   });
 
   it('should support solidity on ethereum', () => {
-    expect(plugin.supportsContext({
-      contractName: 'Test',
-      sourceCode: '',
-      chain: 'ethereum',
-      language: 'solidity',
-      compilerVersion: null,
-      metadata: {},
-    })).toBe(true);
+    expect(
+      plugin.supportsContext({
+        contractName: 'Test',
+        sourceCode: '',
+        chain: 'ethereum',
+        language: 'solidity',
+        compilerVersion: null,
+        metadata: {},
+      }),
+    ).toBe(true);
   });
 
   it('should detect .call before state changes', async () => {
@@ -44,7 +47,7 @@ contract Vulnerable {
     });
 
     expect(findings.length).toBeGreaterThan(0);
-    expect(findings[0]!.pluginId).toBe('reentrancy');
+    expect(findings[0]?.pluginId).toBe('reentrancy');
   });
 
   it('should not flag code with reentrancy guard', async () => {

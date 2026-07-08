@@ -1,12 +1,18 @@
 'use client';
 
+import {
+  AlertTriangle,
+  Bell,
+  CheckCheck,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+  Info,
+  XCircle,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import {
-  Bell, CheckCheck, AlertTriangle, CheckCircle2,
-  Info, XCircle, Clock, ExternalLink,
-} from 'lucide-react';
 
 type NotificationType = 'INFO' | 'SUCCESS' | 'WARNING' | 'ERROR';
 
@@ -24,7 +30,8 @@ const notifications: Notification[] = [
   {
     id: 'n1',
     title: 'Audit Completed',
-    message: 'Security audit for DeFi Protocol v2 has completed with a score of 82/100. 14 findings were identified.',
+    message:
+      'Security audit for DeFi Protocol v2 has completed with a score of 82/100. 14 findings were identified.',
     type: 'SUCCESS',
     read: false,
     link: '/dashboard/audits/a1',
@@ -33,7 +40,8 @@ const notifications: Notification[] = [
   {
     id: 'n2',
     title: 'Critical Finding Detected',
-    message: 'A critical reentrancy vulnerability was found in LiquidityPool.sol:45-58. Immediate action recommended.',
+    message:
+      'A critical reentrancy vulnerability was found in LiquidityPool.sol:45-58. Immediate action recommended.',
     type: 'ERROR',
     read: false,
     link: '/dashboard/audits/a1',
@@ -42,7 +50,8 @@ const notifications: Notification[] = [
   {
     id: 'n3',
     title: 'Blockchain Verification Complete',
-    message: 'Your audit for Staking Rewards has been verified on Stellar Soroban. Transaction hash: stellar-tx-789012.',
+    message:
+      'Your audit for Staking Rewards has been verified on Stellar Soroban. Transaction hash: stellar-tx-789012.',
     type: 'SUCCESS',
     read: false,
     link: '/dashboard/audits/a2',
@@ -51,7 +60,8 @@ const notifications: Notification[] = [
   {
     id: 'n4',
     title: 'AI Analysis Available',
-    message: 'AI-powered analysis is now available for your latest NFT Marketplace audit. Chat with AI to explore findings.',
+    message:
+      'AI-powered analysis is now available for your latest NFT Marketplace audit. Chat with AI to explore findings.',
     type: 'INFO',
     read: true,
     link: '/dashboard/ai-chat',
@@ -60,7 +70,8 @@ const notifications: Notification[] = [
   {
     id: 'n5',
     title: 'Audit Failed',
-    message: 'The audit for Token Vesting contract failed due to compilation errors. Please check your contract and try again.',
+    message:
+      'The audit for Token Vesting contract failed due to compilation errors. Please check your contract and try again.',
     type: 'ERROR',
     read: true,
     link: '/dashboard/audits/a4',
@@ -69,7 +80,8 @@ const notifications: Notification[] = [
   {
     id: 'n6',
     title: 'Weekly Security Digest',
-    message: 'This week: 3 audits completed, 25 findings resolved, average security score improved by 5 points.',
+    message:
+      'This week: 3 audits completed, 25 findings resolved, average security score improved by 5 points.',
     type: 'INFO',
     read: true,
     link: null,
@@ -78,7 +90,8 @@ const notifications: Notification[] = [
   {
     id: 'n7',
     title: 'New Plugin Available',
-    message: 'The "Front-Running Detection" plugin has been added. Enable it in your project settings to detect MEV vulnerabilities.',
+    message:
+      'The "Front-Running Detection" plugin has been added. Enable it in your project settings to detect MEV vulnerabilities.',
     type: 'INFO',
     read: true,
     link: '/dashboard/settings',
@@ -95,12 +108,13 @@ const notifications: Notification[] = [
   },
 ];
 
-const typeConfig: Record<NotificationType, { icon: React.ElementType; color: string; bg: string }> = {
-  INFO: { icon: Info, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-  SUCCESS: { icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-  WARNING: { icon: AlertTriangle, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-  ERROR: { icon: XCircle, color: 'text-red-500', bg: 'bg-red-500/10' },
-};
+const typeConfig: Record<NotificationType, { icon: React.ElementType; color: string; bg: string }> =
+  {
+    INFO: { icon: Info, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    SUCCESS: { icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    WARNING: { icon: AlertTriangle, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+    ERROR: { icon: XCircle, color: 'text-red-500', bg: 'bg-red-500/10' },
+  };
 
 export default function NotificationsPage() {
   const [items, setItems] = useState(notifications);
@@ -129,7 +143,7 @@ export default function NotificationsPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex rounded-lg bg-muted p-1">
+          <div className="bg-muted flex rounded-lg p-1">
             <button
               onClick={() => setFilter('all')}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
@@ -155,7 +169,7 @@ export default function NotificationsPage() {
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+              className="hover:bg-muted inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors"
             >
               <CheckCheck className="h-4 w-4" />
               Mark all read
@@ -165,17 +179,17 @@ export default function NotificationsPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-16">
-          <Bell className="h-12 w-12 text-muted-foreground/30" />
-          <p className="mt-4 text-lg font-medium text-muted-foreground">No notifications</p>
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-card flex flex-col items-center justify-center rounded-xl border py-16">
+          <Bell className="text-muted-foreground/30 h-12 w-12" />
+          <p className="text-muted-foreground mt-4 text-lg font-medium">No notifications</p>
+          <p className="text-muted-foreground text-sm">
             {filter === 'unread'
               ? 'You have read all your notifications.'
-              : 'You haven\'t received any notifications yet.'}
+              : "You haven't received any notifications yet."}
           </p>
         </div>
       ) : (
-        <div className="rounded-xl border bg-card">
+        <div className="bg-card rounded-xl border">
           <div className="divide-y">
             {filtered.map((notification) => {
               const config = typeConfig[notification.type] ?? typeConfig.INFO;
@@ -184,7 +198,7 @@ export default function NotificationsPage() {
               return (
                 <div
                   key={notification.id}
-                  className={`group flex items-start gap-4 px-6 py-4 transition-colors hover:bg-muted/50 ${
+                  className={`hover:bg-muted/50 group flex items-start gap-4 px-6 py-4 transition-colors ${
                     !notification.read ? 'bg-muted/20' : ''
                   }`}
                 >
@@ -200,16 +214,16 @@ export default function NotificationsPage() {
                         <p className="font-medium">
                           {notification.title}
                           {!notification.read && (
-                            <span className="ml-2 inline-block h-2 w-2 rounded-full bg-primary" />
+                            <span className="bg-primary ml-2 inline-block h-2 w-2 rounded-full" />
                           )}
                         </p>
-                        <p className="mt-0.5 text-sm text-muted-foreground line-clamp-2">
+                        <p className="text-muted-foreground mt-0.5 line-clamp-2 text-sm">
                           {notification.message}
                         </p>
                       </div>
 
                       <div className="flex shrink-0 items-center gap-2">
-                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <span className="text-muted-foreground flex items-center gap-1 text-xs">
                           <Clock className="h-3 w-3" />
                           {notification.createdAt.split(' ')[0]}
                         </span>
@@ -220,7 +234,7 @@ export default function NotificationsPage() {
                       {notification.link && (
                         <Link
                           href={notification.link}
-                          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                          className="text-primary inline-flex items-center gap-1 text-xs font-medium hover:underline"
                         >
                           View details
                           <ExternalLink className="h-3 w-3" />
@@ -230,7 +244,7 @@ export default function NotificationsPage() {
                       {!notification.read && (
                         <button
                           onClick={() => markAsRead(notification.id)}
-                          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                          className="text-muted-foreground hover:text-foreground text-xs transition-colors"
                         >
                           Mark as read
                         </button>
@@ -244,8 +258,8 @@ export default function NotificationsPage() {
         </div>
       )}
 
-      <div className="rounded-xl border bg-card p-4 text-center">
-        <p className="text-sm text-muted-foreground">
+      <div className="bg-card rounded-xl border p-4 text-center">
+        <p className="text-muted-foreground text-sm">
           Showing {filtered.length} of {items.length} notifications
           {unreadCount > 0 && ` · ${unreadCount} unread`}
         </p>

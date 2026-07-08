@@ -19,5 +19,9 @@
   },
   "peerDependencies": {
     "eslint": "^8.57.0"
+  },
+  "devDependencies": {
+    "eslint-import-resolver-node": "^0.4.0",
+    "eslint-import-resolver-typescript": "^4.4.5"
   }
 }

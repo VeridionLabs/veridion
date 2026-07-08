@@ -1,10 +1,11 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as bcrypt from 'bcryptjs';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
 import { logger } from '@veridion/logger';
-import type { RegisterDto, LoginDto } from './dto/auth.dto';
+import * as bcrypt from 'bcryptjs';
+
+import { PrismaService } from '../../common/prisma/prisma.service';
+import type { LoginDto, RegisterDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {

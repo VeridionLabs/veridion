@@ -1,3 +1,4 @@
+import { logger } from '@veridion/logger';
 import type {
   AiAnalysisRequest,
   AiAnalysisResponse,
@@ -9,7 +10,7 @@ import type {
   AiVulnerabilityRequest,
   AiVulnerabilityResponse,
 } from '@veridion/shared';
-import { logger } from '@veridion/logger';
+
 import type { AiProvider } from '../ai.service';
 
 interface AnthropicApiResponse {
@@ -31,14 +32,20 @@ export class AnthropicProvider implements AiProvider {
 
   async analyze(request: AiAnalysisRequest): Promise<AiAnalysisResponse> {
     const prompt = this.buildAnalyzePrompt(request);
-    logger.info({ provider: 'anthropic', contractName: request.contractName }, 'Analyzing contract');
+    logger.info(
+      { provider: 'anthropic', contractName: request.contractName },
+      'Analyzing contract',
+    );
 
     const result = await this.requestJson<AiAnalysisResponse>(
       'You are a smart contract security expert. Analyze the contract and output ONLY valid JSON — no markdown, no explanation outside the JSON object.',
       prompt,
     );
 
-    logger.info({ provider: 'anthropic', contractName: request.contractName, riskScore: result.riskScore }, 'Analysis complete');
+    logger.info(
+      { provider: 'anthropic', contractName: request.contractName, riskScore: result.riskScore },
+      'Analysis complete',
+    );
     return result;
   }
 
@@ -60,7 +67,10 @@ export class AnthropicProvider implements AiProvider {
 
     if (!response.ok) {
       const errorText = await response.text();
-      logger.error({ provider: 'anthropic', status: response.status, error: errorText }, 'Anthropic chat API error');
+      logger.error(
+        { provider: 'anthropic', status: response.status, error: errorText },
+        'Anthropic chat API error',
+      );
       throw new Error(`Anthropic API error: ${response.status}`);
     }
 
@@ -72,7 +82,10 @@ export class AnthropicProvider implements AiProvider {
   }
 
   async explainVulnerability(request: AiVulnerabilityRequest): Promise<AiVulnerabilityResponse> {
-    logger.info({ provider: 'anthropic', findingType: request.findingType }, 'Explaining vulnerability');
+    logger.info(
+      { provider: 'anthropic', findingType: request.findingType },
+      'Explaining vulnerability',
+    );
 
     const prompt = `Explain the following smart contract vulnerability in detail:
 
@@ -98,7 +111,10 @@ Output ONLY valid JSON (no markdown fences) with these exact fields:
   }
 
   async suggestFix(request: AiFixRequest): Promise<AiFixResponse> {
-    logger.info({ provider: 'anthropic', vulnerability: request.vulnerability, language: request.language }, 'Suggesting fix');
+    logger.info(
+      { provider: 'anthropic', vulnerability: request.vulnerability, language: request.language },
+      'Suggesting fix',
+    );
 
     const prompt = `Suggest a secure fix for the following vulnerability in ${request.language}:
 
@@ -121,7 +137,10 @@ Output ONLY valid JSON (no markdown fences) with these exact fields:
   }
 
   async generateReportSummary(request: AiReportRequest): Promise<AiReportResponse> {
-    logger.info({ provider: 'anthropic', auditName: request.auditName }, 'Generating report summary');
+    logger.info(
+      { provider: 'anthropic', auditName: request.auditName },
+      'Generating report summary',
+    );
 
     const prompt = `Generate a professional audit report summary for the following smart contract security audit:
 
@@ -189,6 +208,7 @@ Output ONLY valid JSON (no markdown fences) with these exact fields:
 
     // Extract JSON from the response — handle markdown code fences gracefully
     const jsonMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)```/);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const jsonString = jsonMatch ? jsonMatch[1]!.trim() : rawContent.trim();
 
     try {

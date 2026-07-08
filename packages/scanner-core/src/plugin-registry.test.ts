@@ -1,9 +1,14 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { PluginRegistry } from './plugin-registry';
 import type { IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 import { FindingSeverity } from '@veridion/shared';
+import { beforeEach, describe, expect, it } from 'vitest';
 
-function createMockPlugin(id: string, chains: string[] = ['ethereum'], languages: string[] = ['solidity']): IRulePlugin {
+import { PluginRegistry } from './plugin-registry';
+
+function createMockPlugin(
+  id: string,
+  chains: string[] = ['ethereum'],
+  languages: string[] = ['solidity'],
+): IRulePlugin {
   const metadata: PluginMetadata = {
     id,
     name: `Test Plugin ${id}`,
@@ -18,7 +23,10 @@ function createMockPlugin(id: string, chains: string[] = ['ethereum'], languages
 
   return {
     metadata,
-    initialize: async () => {},
+    initialize: async () => {
+      // noop
+    },
+    // eslint-disable-next-line @typescript-eslint/require-await
     analyze: async () => [],
     getFixRecommendation: () => 'No fix needed',
     supportsContext: (ctx) => chains.includes(ctx.chain) && languages.includes(ctx.language),
@@ -59,6 +67,7 @@ describe('PluginRegistry', () => {
     });
 
     expect(matching).toHaveLength(1);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(matching[0]!.metadata.id).toBe('eth');
   });
 

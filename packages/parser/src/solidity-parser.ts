@@ -1,4 +1,5 @@
 import { logger } from '@veridion/logger';
+
 import type { ParsedContract } from './types';
 
 export class SolidityParser {
@@ -35,7 +36,9 @@ export class SolidityParser {
     let match;
 
     while ((match = regex.exec(sourceCode)) !== null) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const name = match[1]!;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const params = match[2] ?? '';
       functions.push({
         name,
@@ -57,13 +60,15 @@ export class SolidityParser {
 
   private extractStateVariables(sourceCode: string): ParsedContract['stateVariables'] {
     const variables: ParsedContract['stateVariables'] = [];
-    const regex = /(?:uint|int|bool|address|bytes|string|mapping)\s*(?:\(\s*[\w]+\s*(?:=>|,)\s*[\w\[\]]+\s*\))?\s+(?:public\s+|internal\s+|private\s+)?(\w+)/gi;
+    const regex =
+      /(?:uint|int|bool|address|bytes|string|mapping)\s*(?:\(\s*[\w]+\s*(?:=>|,)\s*[\w[\]]+\s*\))?\s+(?:public\s+|internal\s+|private\s+)?(\w+)/gi;
     let match;
 
     while ((match = regex.exec(sourceCode)) !== null) {
       variables.push({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         name: match[1]!,
-        type: match[0]!.replace(/\s+\w+$/, ''),
+        type: match[0].replace(/\s+\w+$/, ''),
         visibility: 'internal',
         isConstant: false,
         isImmutable: false,
@@ -82,6 +87,7 @@ export class SolidityParser {
 
     while ((match = regex.exec(sourceCode)) !== null) {
       modifiers.push({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         name: match[1]!,
         parameters: this.parseParameters(match[2] ?? ''),
         lineStart: 0,
@@ -99,6 +105,7 @@ export class SolidityParser {
 
     while ((match = regex.exec(sourceCode)) !== null) {
       events.push({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         name: match[1]!,
         parameters: this.parseParameters(match[2] ?? ''),
         isIndexed: [],
@@ -117,6 +124,7 @@ export class SolidityParser {
     while ((match = regex.exec(sourceCode)) !== null) {
       const symbolsStr = match[1];
       imports.push({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         path: match[2]!,
         alias: null,
         symbols: symbolsStr ? symbolsStr.split(',').map((s) => s.trim()) : null,

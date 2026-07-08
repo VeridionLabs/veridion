@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
 import { logger } from '@veridion/logger';
+
+import { PrismaService } from '../../common/prisma/prisma.service';
 import type { VerifyAuditDto } from './dto/blockchain.dto';
 
 @Injectable()
@@ -11,7 +12,10 @@ export class BlockchainService {
     const audit = await this.prisma.db.audit.findUnique({ where: { id: dto.auditId } });
     if (!audit) throw new NotFoundException('Audit not found');
 
-    logger.info({ auditId: dto.auditId, walletAddress: dto.walletAddress }, 'Blockchain verification requested');
+    logger.info(
+      { auditId: dto.auditId, walletAddress: dto.walletAddress },
+      'Blockchain verification requested',
+    );
 
     // In production, this would submit to Stellar Soroban
     const transactionHash = `stellar-tx-${Date.now()}`;
@@ -31,7 +35,13 @@ export class BlockchainService {
   async getVerification(auditId: string) {
     const audit = await this.prisma.db.audit.findUnique({
       where: { id: auditId },
-      select: { id: true, transactionHash: true, chainStatus: true, securityScore: true, reportHash: true },
+      select: {
+        id: true,
+        transactionHash: true,
+        chainStatus: true,
+        securityScore: true,
+        reportHash: true,
+      },
     });
 
     if (!audit) throw new NotFoundException('Audit not found');

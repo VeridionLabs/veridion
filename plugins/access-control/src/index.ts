@@ -1,5 +1,10 @@
+import type {
+  AnalysisContext,
+  FindingResult,
+  IRulePlugin,
+  PluginMetadata,
+} from '@veridion/scanner-types';
 import { FindingSeverity } from '@veridion/shared';
-import type { IRulePlugin, PluginMetadata, AnalysisContext, FindingResult } from '@veridion/scanner-types';
 
 const metadata: PluginMetadata = {
   id: 'access-control',
@@ -16,8 +21,11 @@ const metadata: PluginMetadata = {
 export class AccessControlPlugin implements IRulePlugin {
   readonly metadata = metadata;
 
-  async initialize(): Promise<void> {}
+  async initialize(): Promise<void> {
+    // noop
+  }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async analyze(context: AnalysisContext): Promise<FindingResult[]> {
     const findings: FindingResult[] = [];
 
@@ -39,8 +47,21 @@ export class AccessControlPlugin implements IRulePlugin {
       { name: 'setApproval', risk: 'Unauthorized approval' },
     ];
 
-    const accessModifiers = ['onlyOwner', 'onlyAdmin', 'onlyRole', 'onlyManager', 'requireAuth', 'auth'];
-    const ownablePatterns = ['Ownable', 'AccessControl', 'onlyRole', 'hasRole', 'msg.sender == owner'];
+    const accessModifiers = [
+      'onlyOwner',
+      'onlyAdmin',
+      'onlyRole',
+      'onlyManager',
+      'requireAuth',
+      'auth',
+    ];
+    const ownablePatterns = [
+      'Ownable',
+      'AccessControl',
+      'onlyRole',
+      'hasRole',
+      'msg.sender == owner',
+    ];
 
     for (const func of sensitiveFunctions) {
       const regex = new RegExp(`function\\s+${func.name}\\s*\\([^)]*\\)`, 'gi');
@@ -50,7 +71,8 @@ export class AccessControlPlugin implements IRulePlugin {
         const funcStart = context.sourceCode.lastIndexOf('function', match.index);
         const snippet = context.sourceCode.slice(funcStart, funcStart + 500);
 
-        const hasAccessControl = accessModifiers.some((m) => snippet.includes(m)) ||
+        const hasAccessControl =
+          accessModifiers.some((m) => snippet.includes(m)) ||
           ownablePatterns.some((p) => snippet.includes(p));
 
         if (!hasAccessControl) {
@@ -76,7 +98,8 @@ export class AccessControlPlugin implements IRulePlugin {
       findings.push({
         pluginId: this.metadata.id,
         title: 'tx.origin Used for Authorization',
-        description: 'Using tx.origin for authorization is vulnerable to phishing attacks. Use msg.sender instead.',
+        description:
+          'Using tx.origin for authorization is vulnerable to phishing attacks. Use msg.sender instead.',
         severity: FindingSeverity.HIGH,
         filePath: `${context.contractName}.sol`,
         lineStart: 1,

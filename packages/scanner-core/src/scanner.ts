@@ -1,8 +1,8 @@
+import { logger } from '@veridion/logger';
 import type { AnalysisContext, FindingResult, IRulePlugin } from '@veridion/scanner-types';
 import { AuditStatus } from '@veridion/shared';
-import { logger } from '@veridion/logger';
 
-import { PluginRegistry } from './plugin-registry';
+import type { PluginRegistry } from './plugin-registry';
 import { ResultAggregator } from './result-aggregator';
 
 export interface ScannerConfig {
@@ -55,9 +55,7 @@ export class Scanner {
 
     if (this.config.parallel) {
       const results = await Promise.allSettled(
-        plugins.map((plugin) =>
-          this.runPlugin(plugin, context),
-        ),
+        plugins.map((plugin) => this.runPlugin(plugin, context)),
       );
       allFindings = results.flatMap((r) => (r.status === 'fulfilled' ? r.value : []));
     } else {
@@ -90,10 +88,7 @@ export class Scanner {
     };
   }
 
-  private async runPlugin(
-    plugin: IRulePlugin,
-    context: AnalysisContext,
-  ): Promise<FindingResult[]> {
+  private async runPlugin(plugin: IRulePlugin, context: AnalysisContext): Promise<FindingResult[]> {
     try {
       logger.debug({ pluginId: plugin.metadata.id }, 'Running plugin');
       const findings = await plugin.analyze(context);
@@ -103,10 +98,7 @@ export class Scanner {
       );
       return findings;
     } catch (error) {
-      logger.error(
-        { pluginId: plugin.metadata.id, error },
-        'Plugin failed',
-      );
+      logger.error({ pluginId: plugin.metadata.id, error }, 'Plugin failed');
       return [];
     }
   }

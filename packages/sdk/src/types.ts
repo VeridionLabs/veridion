@@ -1,15 +1,12 @@
-export type { VeridionClientConfig } from './client';
-export { VeridionClient } from './client';
-
 export type {
-  ApiResponse,
   ApiError,
-  PaginatedResponse,
-  User,
-  Project,
+  ApiResponse,
   Audit,
   AuditFinding,
   AuditStatus,
   FindingSeverity,
   Organization,
+  PaginatedResponse,
+  Project,
+  User,
 } from '@veridion/shared';

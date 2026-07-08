@@ -33,6 +33,7 @@ export class ContractExtractor {
     let match;
 
     while ((match = contractRegex.exec(content)) !== null) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const name = match[1]!;
       const startIdx = match.index;
 

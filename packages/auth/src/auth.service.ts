@@ -1,7 +1,8 @@
-import bcrypt from 'bcryptjs';
-
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument, import/no-named-as-default-member */
+// eslint-disable-next-line import/no-named-as-default-member
 import { prisma } from '@veridion/database';
 import { logger } from '@veridion/logger';
+import bcrypt from 'bcryptjs';
 
 import { JwtService } from './jwt.service';
 import type { AuthConfig, JwtPayload, TokenPair } from './types';
@@ -119,6 +120,7 @@ export class AuthService {
     logger.info({ userId }, 'User logged out');
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async validateUser(token: string): Promise<JwtPayload> {
     return this.jwtService.verifyAccessToken(token);
   }

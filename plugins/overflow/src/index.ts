@@ -1,11 +1,17 @@
 import { FindingSeverity } from '@veridion/shared';
-import type { IRulePlugin, PluginMetadata, AnalysisContext, FindingResult } from '@veridion/scanner-types';
+import type {
+  IRulePlugin,
+  PluginMetadata,
+  AnalysisContext,
+  FindingResult,
+} from '@veridion/scanner-types';
 
 const metadata: PluginMetadata = {
   id: 'overflow',
   name: 'Integer Overflow/Underflow Detector',
   version: '1.0.0',
-  description: 'Detects potential integer overflow/underflow issues, especially in Solidity <0.8.0 without SafeMath.',
+  description:
+    'Detects potential integer overflow/underflow issues, especially in Solidity <0.8.0 without SafeMath.',
   severity: FindingSeverity.HIGH,
   category: 'ARITHMETIC',
   chains: ['ethereum', 'polygon', 'bsc', 'avalanche', 'arbitrum', 'optimism'],
@@ -28,13 +34,15 @@ export class OverflowPlugin implements IRulePlugin {
       findings.push({
         pluginId: this.metadata.id,
         title: 'Unchecked Arithmetic Block',
-        description: 'Arithmetic inside unchecked blocks bypasses overflow/underflow protection. Verify these operations are safe.',
+        description:
+          'Arithmetic inside unchecked blocks bypasses overflow/underflow protection. Verify these operations are safe.',
         severity: FindingSeverity.MEDIUM,
         filePath: `${context.contractName}.sol`,
         lineStart: 1,
         lineEnd: 1,
         codeSnippet: context.sourceCode.slice(match.index, match.index + 100),
-        recommendation: 'Ensure arithmetic in unchecked blocks is safe from overflow/underflow, or remove the unchecked block.',
+        recommendation:
+          'Ensure arithmetic in unchecked blocks is safe from overflow/underflow, or remove the unchecked block.',
         confidence: 0.7,
         references: [],
       });

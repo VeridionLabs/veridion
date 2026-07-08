@@ -1,11 +1,18 @@
 'use client';
 
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  Download,
+  ExternalLink,
+  FileCode,
+  MessageSquare,
+  Shield,
+  XCircle,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import {
-  ArrowLeft, Shield, Clock, CheckCircle2, XCircle, AlertTriangle,
-  FileCode, ExternalLink, Download, MessageSquare,
-} from 'lucide-react';
 
 const audit = {
   id: 'a1',
@@ -32,11 +39,16 @@ const findings = [
     lineStart: 45,
     lineEnd: 58,
     codeSnippet: `function withdraw(uint256 amount) external {\n  require(balances[msg.sender] >= amount, "Insufficient balance");\n  (bool success, ) = msg.sender.call{value: amount}("");\n  require(success, "Transfer failed");\n  balances[msg.sender] -= amount;\n}`,
-    recommendation: 'Update the balance before making the external call. Use the Checks-Effects-Interactions pattern to prevent reentrancy attacks.',
-    aiSummary: 'This is a classic reentrancy vulnerability where the state update (balance deduction) occurs after the external call. An attacker could re-enter the withdraw function before their balance is updated, draining funds.',
+    recommendation:
+      'Update the balance before making the external call. Use the Checks-Effects-Interactions pattern to prevent reentrancy attacks.',
+    aiSummary:
+      'This is a classic reentrancy vulnerability where the state update (balance deduction) occurs after the external call. An attacker could re-enter the withdraw function before their balance is updated, draining funds.',
     confidence: 0.95,
     status: 'OPEN',
-    references: ['https://swcregistry.io/docs/SWC-107', 'https://consensys.github.io/smart-contract-best-practices/attacks/reentrancy/'],
+    references: [
+      'https://swcregistry.io/docs/SWC-107',
+      'https://consensys.github.io/smart-contract-best-practices/attacks/reentrancy/',
+    ],
   },
   {
     id: 'f2',
@@ -47,11 +59,15 @@ const findings = [
     lineStart: 102,
     lineEnd: 112,
     codeSnippet: `function transferOwnership(address newOwner) external {\n  require(msg.sender == owner, "Not owner");\n  pendingOwner = newOwner;\n}`,
-    recommendation: 'Implement a two-step ownership transfer pattern with a confirmation step from the new owner to prevent accidental transfers.',
-    aiSummary: 'The single-step ownership transfer can lead to permanent loss of control if the wrong address is provided. A two-step pattern with acceptOwnership() from the new owner is recommended.',
+    recommendation:
+      'Implement a two-step ownership transfer pattern with a confirmation step from the new owner to prevent accidental transfers.',
+    aiSummary:
+      'The single-step ownership transfer can lead to permanent loss of control if the wrong address is provided. A two-step pattern with acceptOwnership() from the new owner is recommended.',
     confidence: 0.88,
     status: 'ACKNOWLEDGED',
-    references: ['https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable2Step.sol'],
+    references: [
+      'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable2Step.sol',
+    ],
   },
   {
     id: 'f3',
@@ -62,8 +78,10 @@ const findings = [
     lineStart: 78,
     lineEnd: 90,
     codeSnippet: `function batchTransfer(address[] calldata recipients, uint256[] calldata amounts) external {\n  for (uint256 i = 0; i < recipients.length; i++) {\n    balances[recipients[i]] += amounts[i];\n  }\n}`,
-    recommendation: 'Cache the array length before the loop and consider using unchecked blocks for arithmetic operations where overflow is not a concern in Solidity 0.8+.',
-    aiSummary: 'Reading recipients.length on each iteration costs extra gas. Caching it in a local variable reduces gas costs significantly for large arrays.',
+    recommendation:
+      'Cache the array length before the loop and consider using unchecked blocks for arithmetic operations where overflow is not a concern in Solidity 0.8+.',
+    aiSummary:
+      'Reading recipients.length on each iteration costs extra gas. Caching it in a local variable reduces gas costs significantly for large arrays.',
     confidence: 0.72,
     status: 'OPEN',
     references: [],
@@ -77,8 +95,10 @@ const findings = [
     lineStart: 15,
     lineEnd: 19,
     codeSnippet: `function setAdmin(address newAdmin) external onlyOwner {\n  admin = newAdmin;\n}`,
-    recommendation: 'Add a check to prevent setting admin to address(0) which would permanently lose admin capabilities.',
-    aiSummary: 'Setting a privileged role to the zero address results in permanent loss of that functionality. Always validate address parameters.',
+    recommendation:
+      'Add a check to prevent setting admin to address(0) which would permanently lose admin capabilities.',
+    aiSummary:
+      'Setting a privileged role to the zero address results in permanent loss of that functionality. Always validate address parameters.',
     confidence: 0.99,
     status: 'RESOLVED',
     references: [],
@@ -92,11 +112,15 @@ const findings = [
     lineStart: 200,
     lineEnd: 205,
     codeSnippet: `function emergencyStop() external {\n  selfdestruct(payable(msg.sender));\n}`,
-    recommendation: 'Add an onlyOwner or multi-signature requirement to selfdestruct to prevent unauthorized destruction of the contract.',
-    aiSummary: 'Anyone can call selfdestruct and destroy the contract, taking all funds and rendering the protocol unusable. Restrict this to the owner or a multisig.',
+    recommendation:
+      'Add an onlyOwner or multi-signature requirement to selfdestruct to prevent unauthorized destruction of the contract.',
+    aiSummary:
+      'Anyone can call selfdestruct and destroy the contract, taking all funds and rendering the protocol unusable. Restrict this to the owner or a multisig.',
     confidence: 0.85,
     status: 'OPEN',
-    references: ['https://docs.soliditylang.org/en/latest/security-considerations.html#selfdestruct'],
+    references: [
+      'https://docs.soliditylang.org/en/latest/security-considerations.html#selfdestruct',
+    ],
   },
 ];
 
@@ -126,7 +150,7 @@ const statusColor: Record<string, string> = {
 
 export default function AuditDetailPage() {
   const params = useParams();
-  const auditId = params.id as string;
+  const _auditId = params.id as string;
   const StatusIcon = statusIcon[audit.status] ?? Clock;
 
   const severityCounts = findings.reduce(
@@ -142,7 +166,7 @@ export default function AuditDetailPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/dashboard/audits"
-          className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg p-2 transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
@@ -156,10 +180,10 @@ export default function AuditDetailPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors">
+          <button className="hover:bg-muted inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors">
             <Download className="h-4 w-4" /> Export
           </button>
-          <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
+          <button className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
             <Shield className="h-4 w-4" /> Verify on-chain
           </button>
         </div>
@@ -170,15 +194,29 @@ export default function AuditDetailPage() {
           {
             label: 'Security Score',
             value: `${audit.score}/100`,
-            color: audit.score >= 80 ? 'text-emerald-500' : audit.score >= 50 ? 'text-amber-500' : 'text-red-500',
+            color:
+              audit.score >= 80
+                ? 'text-emerald-500'
+                : audit.score >= 50
+                  ? 'text-amber-500'
+                  : 'text-red-500',
           },
-          { label: 'Status', value: audit.status, color: statusColor[audit.status] ?? '', icon: StatusIcon },
+          {
+            label: 'Status',
+            value: audit.status,
+            color: statusColor[audit.status] ?? '',
+            icon: StatusIcon,
+          },
           { label: 'Findings', value: findings.length, color: 'text-violet-500' },
           { label: 'Duration', value: audit.duration, color: 'text-blue-500' },
-          { label: 'Completed', value: audit.completedAt?.split(' ')[0] ?? '—', color: 'text-muted-foreground' },
+          {
+            label: 'Completed',
+            value: audit.completedAt?.split(' ')[0] ?? '—',
+            color: 'text-muted-foreground',
+          },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-xl border bg-card p-4 shadow-sm">
-            <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
+          <div key={stat.label} className="bg-card rounded-xl border p-4 shadow-sm">
+            <p className="text-muted-foreground text-xs font-medium">{stat.label}</p>
             <p className={`mt-1 text-2xl font-bold ${stat.color}`}>
               {stat.icon && <stat.icon className="mr-1 inline h-5 w-5" />}
               {stat.value}
@@ -210,18 +248,20 @@ export default function AuditDetailPage() {
           return (
             <div
               key={finding.id}
-              className={`rounded-xl border bg-card shadow-sm ${config?.border ?? ''}`}
+              className={`bg-card rounded-xl border shadow-sm ${config?.border ?? ''}`}
             >
               <div className="flex items-start justify-between border-b px-6 py-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${config?.bg ?? ''} ${config?.color ?? ''}`}>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${config?.bg ?? ''} ${config?.color ?? ''}`}
+                    >
                       {finding.severity}
                     </span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                       {finding.filePath}:{finding.lineStart}-{finding.lineEnd}
                     </span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                       {(finding.confidence * 100).toFixed(0)}% confidence
                     </span>
                   </div>
@@ -242,13 +282,13 @@ export default function AuditDetailPage() {
                 </span>
               </div>
 
-              <div className="px-6 py-4 space-y-4">
+              <div className="space-y-4 px-6 py-4">
                 {finding.aiSummary && (
-                  <div className="rounded-lg bg-muted/50 p-4">
+                  <div className="bg-muted/50 rounded-lg p-4">
                     <div className="flex items-start gap-2">
-                      <MessageSquare className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                      <MessageSquare className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                       <div>
-                        <p className="text-xs font-medium text-primary">AI Analysis</p>
+                        <p className="text-primary text-xs font-medium">AI Analysis</p>
                         <p className="mt-1 text-sm leading-relaxed">{finding.aiSummary}</p>
                       </div>
                     </div>
@@ -257,7 +297,7 @@ export default function AuditDetailPage() {
 
                 {finding.codeSnippet && (
                   <div>
-                    <p className="mb-2 text-xs font-medium text-muted-foreground">
+                    <p className="text-muted-foreground mb-2 text-xs font-medium">
                       <FileCode className="mr-1 inline h-3.5 w-3.5" />
                       Vulnerable Code
                     </p>
@@ -269,14 +309,14 @@ export default function AuditDetailPage() {
 
                 {finding.recommendation && (
                   <div>
-                    <p className="mb-1 text-xs font-medium text-muted-foreground">Recommendation</p>
+                    <p className="text-muted-foreground mb-1 text-xs font-medium">Recommendation</p>
                     <p className="text-sm leading-relaxed">{finding.recommendation}</p>
                   </div>
                 )}
 
                 {finding.references.length > 0 && (
                   <div>
-                    <p className="mb-1 text-xs font-medium text-muted-foreground">References</p>
+                    <p className="text-muted-foreground mb-1 text-xs font-medium">References</p>
                     <div className="flex flex-wrap gap-2">
                       {finding.references.map((ref) => (
                         <a
@@ -284,7 +324,7 @@ export default function AuditDetailPage() {
                           href={ref}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-md bg-muted px-2.5 py-1 text-xs hover:bg-muted/80 transition-colors"
+                          className="bg-muted hover:bg-muted/80 inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-colors"
                         >
                           {ref.length > 50 ? `${ref.slice(0, 50)}...` : ref}
                           <ExternalLink className="h-3 w-3" />

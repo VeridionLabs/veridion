@@ -1,3 +1,4 @@
+import { logger } from '@veridion/logger';
 import type {
   AiAnalysisRequest,
   AiAnalysisResponse,
@@ -9,7 +10,6 @@ import type {
   AiVulnerabilityRequest,
   AiVulnerabilityResponse,
 } from '@veridion/shared';
-import { logger } from '@veridion/logger';
 
 export interface AiProvider {
   readonly name: string;
@@ -27,9 +27,15 @@ export class AiService {
   }
 
   async analyzeContract(request: AiAnalysisRequest): Promise<AiAnalysisResponse> {
-    logger.info({ contractName: request.contractName, language: request.language }, 'Analyzing contract');
+    logger.info(
+      { contractName: request.contractName, language: request.language },
+      'Analyzing contract',
+    );
     const result = await this.provider.analyze(request);
-    logger.info({ contractName: request.contractName, riskScore: result.riskScore }, 'Analysis complete');
+    logger.info(
+      { contractName: request.contractName, riskScore: result.riskScore },
+      'Analysis complete',
+    );
     return result;
   }
 
@@ -43,12 +49,18 @@ export class AiService {
   }
 
   async suggestFix(request: AiFixRequest): Promise<AiFixResponse> {
-    logger.info({ vulnerability: request.vulnerability, language: request.language }, 'Suggesting fix');
+    logger.info(
+      { vulnerability: request.vulnerability, language: request.language },
+      'Suggesting fix',
+    );
     return this.provider.suggestFix(request);
   }
 
   async generateReportSummary(request: AiReportRequest): Promise<AiReportResponse> {
-    logger.info({ auditName: request.auditName, findingCount: request.findings.length }, 'Generating report');
+    logger.info(
+      { auditName: request.auditName, findingCount: request.findings.length },
+      'Generating report',
+    );
     return this.provider.generateReportSummary(request);
   }
 

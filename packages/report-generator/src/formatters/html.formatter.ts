@@ -1,4 +1,5 @@
 import { ReportFormat } from '@veridion/shared';
+
 import type { ReportData, ReportFormatter } from '../report-generator';
 import { MarkdownFormatter } from './markdown.formatter';
 

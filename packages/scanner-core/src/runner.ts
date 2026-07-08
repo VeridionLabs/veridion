@@ -1,10 +1,10 @@
+import { logger } from '@veridion/logger';
 import type { AnalysisContext } from '@veridion/scanner-types';
 import { AuditStatus } from '@veridion/shared';
-import { logger } from '@veridion/logger';
 
-import type { ScanResult, ScannerConfig } from './scanner';
-import { Scanner } from './scanner';
 import type { PluginRegistry } from './plugin-registry';
+import type { ScannerConfig, ScanResult } from './scanner';
+import { Scanner } from './scanner';
 
 export interface ScanJob {
   id: string;

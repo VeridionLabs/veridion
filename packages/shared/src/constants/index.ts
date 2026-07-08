@@ -25,7 +25,15 @@ export const BLOCKCHAIN = {
   },
 } as const;
 
-export const SUPPORTED_CHAINS = ['ethereum', 'polygon', 'bsc', 'avalanche', 'arbitrum', 'optimism', 'stellar'] as const;
+export const SUPPORTED_CHAINS = [
+  'ethereum',
+  'polygon',
+  'bsc',
+  'avalanche',
+  'arbitrum',
+  'optimism',
+  'stellar',
+] as const;
 export const SUPPORTED_LANGUAGES = ['solidity', 'vyper', 'rust', 'move'] as const;
 
 export const SEVERITY_WEIGHTS: Record<string, number> = {

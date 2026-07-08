@@ -1,16 +1,25 @@
 'use client';
 
+import {
+  AlertTriangle,
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+  FileCode,
+  Github,
+  Play,
+  Plus,
+  Shield,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import {
-  ArrowLeft, FileCode, Shield, Clock, CheckCircle2, AlertTriangle,
-  ExternalLink, Plus, Play, Github,
-} from 'lucide-react';
 
 const project = {
   id: '1',
   name: 'DeFi Protocol v2',
-  description: 'A decentralized exchange protocol with liquidity pools, staking, and yield farming capabilities.',
+  description:
+    'A decentralized exchange protocol with liquidity pools, staking, and yield farming capabilities.',
   chain: 'Ethereum',
   language: 'Solidity',
   repoUrl: 'https://github.com/defi/protocol-v2',
@@ -59,13 +68,13 @@ export default function ProjectDetailPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/dashboard/projects"
-          className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg p-2 transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary font-bold text-xl">
+            <div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-xl text-xl font-bold">
               {project.name.charAt(0)}
             </div>
             <div>
@@ -79,7 +88,7 @@ export default function ProjectDetailPage() {
         <div className="flex gap-2">
           <Link
             href={`/dashboard/audits?projectId=${projectId}`}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
           >
             <Play className="h-4 w-4" /> New Audit
           </Link>
@@ -87,14 +96,14 @@ export default function ProjectDetailPage() {
       </div>
 
       {project.description && (
-        <div className="rounded-xl border bg-card p-6 shadow-sm">
+        <div className="bg-card rounded-xl border p-6 shadow-sm">
           <p className="text-sm leading-relaxed">{project.description}</p>
           {project.repoUrl && (
             <a
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+              className="text-primary mt-3 inline-flex items-center gap-1.5 text-sm hover:underline"
             >
               <Github className="h-4 w-4" />
               {project.repoUrl.replace('https://github.com/', '')}
@@ -106,27 +115,28 @@ export default function ProjectDetailPage() {
 
       <div className="grid gap-4 md:grid-cols-4">
         {[
-          { label: 'Security Score', value: `${project.securityScore}/100`, color: 'text-emerald-500' },
+          {
+            label: 'Security Score',
+            value: `${project.securityScore}/100`,
+            color: 'text-emerald-500',
+          },
           { label: 'Contracts', value: project.contracts, color: 'text-blue-500' },
           { label: 'Audits', value: project.audits, color: 'text-violet-500' },
           { label: 'Created', value: project.createdAt, color: 'text-muted-foreground' },
         ].map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl border bg-card p-4 shadow-sm"
-          >
-            <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
+          <div key={stat.label} className="bg-card rounded-xl border p-4 shadow-sm">
+            <p className="text-muted-foreground text-xs font-medium">{stat.label}</p>
             <p className={`mt-1 text-2xl font-bold ${stat.color}`}>{stat.value}</p>
           </div>
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-xl border bg-card shadow-sm">
+        <div className="space-y-6 lg:col-span-2">
+          <div className="bg-card rounded-xl border shadow-sm">
             <div className="flex items-center justify-between border-b px-6 py-4">
               <h2 className="font-semibold">Contracts</h2>
-              <button className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
+              <button className="text-primary inline-flex items-center gap-1.5 text-sm hover:underline">
                 <Plus className="h-4 w-4" /> Add Contract
               </button>
             </div>
@@ -134,30 +144,27 @@ export default function ProjectDetailPage() {
               {contracts.map((contract) => (
                 <div
                   key={contract.name}
-                  className="flex items-center justify-between px-6 py-3 hover:bg-muted/50 transition-colors"
+                  className="hover:bg-muted/50 flex items-center justify-between px-6 py-3 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <FileCode className="h-4 w-4 text-muted-foreground" />
+                    <FileCode className="text-muted-foreground h-4 w-4" />
                     <div>
                       <p className="text-sm font-medium">{contract.name}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         {contract.lines} lines · {contract.hash}
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs text-muted-foreground">{contract.lastModified}</span>
+                  <span className="text-muted-foreground text-xs">{contract.lastModified}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-xl border bg-card shadow-sm">
+          <div className="bg-card rounded-xl border shadow-sm">
             <div className="flex items-center justify-between border-b px-6 py-4">
               <h2 className="font-semibold">Audits</h2>
-              <Link
-                href="/dashboard/audits"
-                className="text-sm text-primary hover:underline"
-              >
+              <Link href="/dashboard/audits" className="text-primary text-sm hover:underline">
                 View all
               </Link>
             </div>
@@ -169,19 +176,19 @@ export default function ProjectDetailPage() {
                   <Link
                     key={audit.id}
                     href={`/dashboard/audits/${audit.id}`}
-                    className="flex items-center justify-between px-6 py-3 hover:bg-muted/50 transition-colors"
+                    className="hover:bg-muted/50 flex items-center justify-between px-6 py-3 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <span className={`inline-flex items-center gap-1 text-sm ${color}`}>
                         <Icon className="h-4 w-4" /> {audit.status}
                       </span>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-muted-foreground text-sm">
                         {audit.findings} findings
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
                       <span className="text-sm font-medium">{audit.score}/100</span>
-                      <span className="text-xs text-muted-foreground">{audit.date}</span>
+                      <span className="text-muted-foreground text-xs">{audit.date}</span>
                     </div>
                   </Link>
                 );
@@ -191,25 +198,25 @@ export default function ProjectDetailPage() {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-xl border bg-card p-6 shadow-sm">
+          <div className="bg-card rounded-xl border p-6 shadow-sm">
             <h3 className="font-semibold">Quick Actions</h3>
             <div className="mt-4 space-y-2">
-              <button className="w-full rounded-lg border px-4 py-2.5 text-sm font-medium hover:bg-muted transition-colors text-left">
+              <button className="hover:bg-muted w-full rounded-lg border px-4 py-2.5 text-left text-sm font-medium transition-colors">
                 <Play className="mr-2 inline h-4 w-4" />
                 Run Full Audit
               </button>
-              <button className="w-full rounded-lg border px-4 py-2.5 text-sm font-medium hover:bg-muted transition-colors text-left">
+              <button className="hover:bg-muted w-full rounded-lg border px-4 py-2.5 text-left text-sm font-medium transition-colors">
                 <FileCode className="mr-2 inline h-4 w-4" />
                 Upload Contract
               </button>
-              <button className="w-full rounded-lg border px-4 py-2.5 text-sm font-medium hover:bg-muted transition-colors text-left">
+              <button className="hover:bg-muted w-full rounded-lg border px-4 py-2.5 text-left text-sm font-medium transition-colors">
                 <Shield className="mr-2 inline h-4 w-4" />
                 Verify on Stellar
               </button>
             </div>
           </div>
 
-          <div className="rounded-xl border bg-card p-6 shadow-sm">
+          <div className="bg-card rounded-xl border p-6 shadow-sm">
             <h3 className="font-semibold">Security Summary</h3>
             <div className="mt-4 space-y-3">
               {[
@@ -223,7 +230,7 @@ export default function ProjectDetailPage() {
                     <span className={`h-2 w-2 rounded-full ${item.color}`} />
                     {item.severity}
                   </div>
-                  <span className="font-mono text-muted-foreground">{item.count}</span>
+                  <span className="text-muted-foreground font-mono">{item.count}</span>
                 </div>
               ))}
             </div>

@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Put, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuditsService } from './audits.service';
-import { CreateAuditDto, AuditQueryDto } from './dto/audit.dto';
+import { AuditQueryDto, CreateAuditDto } from './dto/audit.dto';
 
 @ApiTags('Audits')
 @Controller('audits')

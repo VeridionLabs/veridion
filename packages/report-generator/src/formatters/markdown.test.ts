@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { MarkdownFormatter } from './markdown.formatter';
 import { FindingSeverity, ReportFormat } from '@veridion/shared';
+import { describe, expect, it } from 'vitest';
+
 import type { ReportData } from '../report-generator';
+import { MarkdownFormatter } from './markdown.formatter';
 
 describe('MarkdownFormatter', () => {
   const formatter = new MarkdownFormatter();

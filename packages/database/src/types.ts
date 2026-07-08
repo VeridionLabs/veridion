@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 export type TransactionClient = Prisma.TransactionClient;
-export type PrismaTx = Parameters<Parameters<PrismaClient['$transaction']>[0]>[0];
+export type PrismaTx = Omit<Prisma.TransactionClient, '$transaction'>;

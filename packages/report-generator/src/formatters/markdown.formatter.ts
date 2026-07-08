@@ -1,4 +1,5 @@
 import { ReportFormat } from '@veridion/shared';
+
 import type { ReportData, ReportFormatter } from '../report-generator';
 
 export class MarkdownFormatter implements ReportFormatter {
@@ -36,6 +37,7 @@ export class MarkdownFormatter implements ReportFormatter {
     lines.push('', '---', '', '## Detailed Findings', '');
 
     for (let i = 0; i < data.findings.length; i++) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const finding = data.findings[i]!;
       lines.push(
         `### ${i + 1}. ${finding.title}`,

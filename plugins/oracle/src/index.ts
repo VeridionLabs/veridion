@@ -1,11 +1,17 @@
 import { FindingSeverity } from '@veridion/shared';
-import type { IRulePlugin, PluginMetadata, AnalysisContext, FindingResult } from '@veridion/scanner-types';
+import type {
+  IRulePlugin,
+  PluginMetadata,
+  AnalysisContext,
+  FindingResult,
+} from '@veridion/scanner-types';
 
 const metadata: PluginMetadata = {
   id: 'oracle',
   name: 'Oracle Manipulation Detector',
   version: '1.0.0',
-  description: 'Detects reliance on single oracles and potential price manipulation vulnerabilities.',
+  description:
+    'Detects reliance on single oracles and potential price manipulation vulnerabilities.',
   severity: FindingSeverity.HIGH,
   category: 'ORACLE',
   chains: ['ethereum', 'polygon', 'bsc', 'avalanche', 'arbitrum', 'optimism'],
@@ -35,13 +41,15 @@ export class OraclePlugin implements IRulePlugin {
         findings.push({
           pluginId: this.metadata.id,
           title: 'Potential Oracle Manipulation',
-          description: 'Using AMM spot prices can lead to oracle manipulation via flash loans or large trades.',
+          description:
+            'Using AMM spot prices can lead to oracle manipulation via flash loans or large trades.',
           severity: FindingSeverity.HIGH,
           filePath: `${context.contractName}.sol`,
           lineStart: 1,
           lineEnd: 1,
           codeSnippet: '',
-          recommendation: 'Use Chainlink oracles or TWAP (Time-Weighted Average Price) instead of spot prices.',
+          recommendation:
+            'Use Chainlink oracles or TWAP (Time-Weighted Average Price) instead of spot prices.',
           confidence: 0.8,
           references: ['https://docs.chain.link/data-feeds'],
         });
@@ -52,7 +60,8 @@ export class OraclePlugin implements IRulePlugin {
     // Single oracle dependency
     if (/Chainlink/.test(context.sourceCode)) {
       const hasAggregator = /latestRoundData\s*\(/.test(context.sourceCode);
-      const hasStaleCheck = /stale/i.test(context.sourceCode) || /updatedAt/.test(context.sourceCode);
+      const hasStaleCheck =
+        /stale/i.test(context.sourceCode) || /updatedAt/.test(context.sourceCode);
       const hasMinAnswer = /minAnswer|maxAnswer/.test(context.sourceCode);
 
       if (!hasAggregator && !hasStaleCheck) {
@@ -75,7 +84,8 @@ export class OraclePlugin implements IRulePlugin {
         findings.push({
           pluginId: this.metadata.id,
           title: 'Missing Oracle Circuit Breaker Check',
-          description: 'Chainlink oracles on L2s should verify min/max answer values as an additional safety check.',
+          description:
+            'Chainlink oracles on L2s should verify min/max answer values as an additional safety check.',
           severity: FindingSeverity.LOW,
           filePath: `${context.contractName}.sol`,
           lineStart: 1,

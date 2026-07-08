@@ -1,11 +1,17 @@
 import { FindingSeverity } from '@veridion/shared';
-import type { IRulePlugin, PluginMetadata, AnalysisContext, FindingResult } from '@veridion/scanner-types';
+import type {
+  IRulePlugin,
+  PluginMetadata,
+  AnalysisContext,
+  FindingResult,
+} from '@veridion/scanner-types';
 
 const metadata: PluginMetadata = {
   id: 'randomness',
   name: 'Weak Randomness Detector',
   version: '1.0.0',
-  description: 'Detects weak sources of randomness (block.timestamp, block.difficulty, blockhash, etc.).',
+  description:
+    'Detects weak sources of randomness (block.timestamp, block.difficulty, blockhash, etc.).',
   severity: FindingSeverity.HIGH,
   category: 'RANDOMNESS',
   chains: ['ethereum', 'polygon', 'bsc', 'avalanche', 'arbitrum', 'optimism'],
@@ -42,7 +48,9 @@ export class RandomnessPlugin implements IRulePlugin {
           filePath: `${context.contractName}.sol`,
           lineStart: line,
           lineEnd: line,
-          codeSnippet: context.sourceCode.slice(Math.max(0, match.index - 30), match.index + 30).trim(),
+          codeSnippet: context.sourceCode
+            .slice(Math.max(0, match.index - 30), match.index + 30)
+            .trim(),
           recommendation: 'Use Chainlink VRF or a commit-reveal scheme for on-chain randomness.',
           confidence: 0.9,
           references: ['https://docs.chain.link/vrf'],

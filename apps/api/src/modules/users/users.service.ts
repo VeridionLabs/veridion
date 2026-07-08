@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { PrismaService } from '../../common/prisma/prisma.service';
 import type { UpdateUserDto } from './dto/user.dto';
 
@@ -35,7 +36,12 @@ export class UsersService {
         walletAddress: dto.walletAddress,
       },
       select: {
-        id: true, email: true, displayName: true, avatarUrl: true, walletAddress: true, role: true,
+        id: true,
+        email: true,
+        displayName: true,
+        avatarUrl: true,
+        walletAddress: true,
+        role: true,
       },
     });
   }

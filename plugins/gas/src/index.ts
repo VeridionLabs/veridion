@@ -1,5 +1,10 @@
+import type {
+  AnalysisContext,
+  FindingResult,
+  IRulePlugin,
+  PluginMetadata,
+} from '@veridion/scanner-types';
 import { FindingSeverity } from '@veridion/shared';
-import type { IRulePlugin, PluginMetadata, AnalysisContext, FindingResult } from '@veridion/scanner-types';
 
 const metadata: PluginMetadata = {
   id: 'gas',
@@ -18,6 +23,7 @@ export class GasPlugin implements IRulePlugin {
 
   async initialize(): Promise<void> {}
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async analyze(context: AnalysisContext): Promise<FindingResult[]> {
     const findings: FindingResult[] = [];
 
@@ -26,7 +32,8 @@ export class GasPlugin implements IRulePlugin {
       findings.push({
         pluginId: this.metadata.id,
         title: 'Storage Reads in Loop',
-        description: 'Reading storage variables inside a loop is extremely gas-inefficient. Cache storage values in memory before the loop.',
+        description:
+          'Reading storage variables inside a loop is extremely gas-inefficient. Cache storage values in memory before the loop.',
         severity: FindingSeverity.GAS,
         filePath: `${context.contractName}.sol`,
         lineStart: 1,
@@ -39,11 +46,14 @@ export class GasPlugin implements IRulePlugin {
     }
 
     // Use of string for function params (use calldata)
-    if (/\bfunction\s+\w+\s*\([^)]*\bstring\b(?!\s+(?:calldata|memory)\b)/g.test(context.sourceCode)) {
+    if (
+      /\bfunction\s+\w+\s*\([^)]*\bstring\b(?!\s+(?:calldata|memory)\b)/g.test(context.sourceCode)
+    ) {
       findings.push({
         pluginId: this.metadata.id,
         title: 'Use calldata Instead of memory',
-        description: 'Function parameters of type string/bytes/array should use calldata instead of memory when not modified.',
+        description:
+          'Function parameters of type string/bytes/array should use calldata instead of memory when not modified.',
         severity: FindingSeverity.GAS,
         filePath: `${context.contractName}.sol`,
         lineStart: 1,
@@ -60,7 +70,8 @@ export class GasPlugin implements IRulePlugin {
       findings.push({
         pluginId: this.metadata.id,
         title: 'Use ++i Instead of i++',
-        description: 'Using ++i is slightly more gas-efficient than i++ as it avoids creating a temporary variable.',
+        description:
+          'Using ++i is slightly more gas-efficient than i++ as it avoids creating a temporary variable.',
         severity: FindingSeverity.GAS,
         filePath: `${context.contractName}.sol`,
         lineStart: 1,

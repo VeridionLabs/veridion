@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { logger } from '@veridion/logger';
-import type { CreateAuditDto, AuditQueryDto } from './dto/audit.dto';
+
+import { PrismaService } from '../../common/prisma/prisma.service';
+import type { AuditQueryDto, CreateAuditDto } from './dto/audit.dto';
 
 @Injectable()
 export class AuditsService {
@@ -46,7 +47,14 @@ export class AuditsService {
 
     return {
       data,
-      meta: { total, page, limit, totalPages: Math.ceil(total / limit), hasNextPage: page * limit < total, hasPreviousPage: page > 1 },
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page * limit < total,
+        hasPreviousPage: page > 1,
+      },
     };
   }
 

@@ -15,12 +15,7 @@ function createConfig(projectRoot) {
       project: resolve(projectRoot, 'tsconfig.json'),
       tsconfigRootDir: projectRoot,
     },
-    plugins: [
-      '@typescript-eslint',
-      'import',
-      'simple-import-sort',
-      'unused-imports',
-    ],
+    plugins: ['@typescript-eslint', 'import', 'simple-import-sort', 'unused-imports'],
     extends: [
       'eslint:recommended',
       'plugin:@typescript-eslint/recommended',

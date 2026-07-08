@@ -1,3 +1,4 @@
+import { logger } from '@veridion/logger';
 import type {
   AiAnalysisRequest,
   AiAnalysisResponse,
@@ -9,7 +10,7 @@ import type {
   AiVulnerabilityRequest,
   AiVulnerabilityResponse,
 } from '@veridion/shared';
-import { logger } from '@veridion/logger';
+
 import type { AiProvider } from '../ai.service';
 
 interface OpenAiChatResponse {
@@ -39,7 +40,10 @@ export class OpenAiProvider implements AiProvider {
       prompt,
     );
 
-    logger.info({ provider: 'openai', contractName: request.contractName, riskScore: result.riskScore }, 'Analysis complete');
+    logger.info(
+      { provider: 'openai', contractName: request.contractName, riskScore: result.riskScore },
+      'Analysis complete',
+    );
     return result;
   }
 
@@ -59,7 +63,10 @@ export class OpenAiProvider implements AiProvider {
 
     if (!response.ok) {
       const errorText = await response.text();
-      logger.error({ provider: 'openai', status: response.status, error: errorText }, 'OpenAI chat API error');
+      logger.error(
+        { provider: 'openai', status: response.status, error: errorText },
+        'OpenAI chat API error',
+      );
       throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
 
@@ -80,7 +87,10 @@ export class OpenAiProvider implements AiProvider {
   }
 
   async explainVulnerability(request: AiVulnerabilityRequest): Promise<AiVulnerabilityResponse> {
-    logger.info({ provider: 'openai', findingType: request.findingType }, 'Explaining vulnerability');
+    logger.info(
+      { provider: 'openai', findingType: request.findingType },
+      'Explaining vulnerability',
+    );
 
     const prompt = `Explain the following smart contract vulnerability in detail:
 
@@ -106,7 +116,10 @@ Output ONLY valid JSON (no markdown fences) with these exact fields:
   }
 
   async suggestFix(request: AiFixRequest): Promise<AiFixResponse> {
-    logger.info({ provider: 'openai', vulnerability: request.vulnerability, language: request.language }, 'Suggesting fix');
+    logger.info(
+      { provider: 'openai', vulnerability: request.vulnerability, language: request.language },
+      'Suggesting fix',
+    );
 
     const prompt = `Suggest a secure fix for the following vulnerability in ${request.language}:
 
@@ -199,6 +212,7 @@ Output ONLY valid JSON (no markdown fences) with these exact fields:
 
     // Extract JSON from the response — handle markdown code fences gracefully
     const jsonMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)```/);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const jsonString = jsonMatch ? jsonMatch[1]!.trim() : rawContent.trim();
 
     try {

@@ -1,12 +1,19 @@
 'use client';
 
+import {
+  Calendar,
+  CheckCircle2,
+  ChevronDown,
+  Clock,
+  Eye,
+  FileJson,
+  FileText,
+  Share2,
+  Shield,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import {
-  FileText, Download, Eye, Clock, CheckCircle2, Shield,
-  FileJson, Share2, Calendar, ChevronDown,
-} from 'lucide-react';
 
 const reports = [
   {
@@ -75,12 +82,12 @@ const statusBadge: Record<string, { icon: React.ElementType; color: string }> = 
 export default function ReportsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  function handleDownload(reportId: string, format: string) {
+  function handleDownload(_reportId: string, format: string) {
     // TODO: Replace with actual download
     toast.success(`Downloading ${format} report...`);
   }
 
-  function handleShare(reportId: string) {
+  function handleShare(_reportId: string) {
     toast.info('Report link copied to clipboard!');
   }
 
@@ -88,12 +95,10 @@ export default function ReportsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
-        <p className="text-muted-foreground mt-1">
-          View and download generated audit reports.
-        </p>
+        <p className="text-muted-foreground mt-1">View and download generated audit reports.</p>
       </div>
 
-      <div className="rounded-xl border bg-card">
+      <div className="bg-card rounded-xl border">
         <div className="divide-y">
           {reports.map((report) => {
             const isExpanded = expandedId === report.id;
@@ -106,12 +111,12 @@ export default function ReportsPage() {
                   onClick={() => setExpandedId(isExpanded ? null : report.id)}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <FileText className="h-5 w-5 text-primary" />
+                    <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
+                      <FileText className="text-primary h-5 w-5" />
                     </div>
                     <div>
                       <p className="font-medium">{report.projectName}</p>
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                      <div className="text-muted-foreground flex items-center gap-3 text-sm">
                         <span className="inline-flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5" />
                           {report.auditDate}
@@ -119,9 +124,7 @@ export default function ReportsPage() {
                         {report.securityScore != null && (
                           <span>Score: {report.securityScore}/100</span>
                         )}
-                        {report.findings != null && (
-                          <span>{report.findings} findings</span>
-                        )}
+                        {report.findings != null && <span>{report.findings} findings</span>}
                       </div>
                     </div>
                   </div>
@@ -134,7 +137,7 @@ export default function ReportsPage() {
                       </span>
                     )}
                     <ChevronDown
-                      className={`h-4 w-4 text-muted-foreground transition-transform ${
+                      className={`text-muted-foreground h-4 w-4 transition-transform ${
                         isExpanded ? 'rotate-180' : ''
                       }`}
                     />
@@ -142,29 +145,29 @@ export default function ReportsPage() {
                 </div>
 
                 {isExpanded && (
-                  <div className="border-t bg-muted/10 px-6 py-4">
+                  <div className="bg-muted/10 border-t px-6 py-4">
                     <div className="grid gap-4 text-sm sm:grid-cols-2">
                       <div>
-                        <p className="font-medium text-muted-foreground">Audit ID</p>
+                        <p className="text-muted-foreground font-medium">Audit ID</p>
                         <Link
                           href={`/dashboard/audits/${report.auditId}`}
-                          className="mt-0.5 font-mono text-primary hover:underline"
+                          className="text-primary mt-0.5 font-mono hover:underline"
                         >
                           {report.auditId}
                         </Link>
                       </div>
                       <div>
-                        <p className="font-medium text-muted-foreground">Report Hash</p>
-                        <p className="mt-0.5 font-mono text-muted-foreground">
+                        <p className="text-muted-foreground font-medium">Report Hash</p>
+                        <p className="text-muted-foreground mt-0.5 font-mono">
                           {report.reportHash ?? 'N/A'}
                         </p>
                       </div>
                       <div>
-                        <p className="font-medium text-muted-foreground">Generated</p>
+                        <p className="text-muted-foreground font-medium">Generated</p>
                         <p className="mt-0.5">{report.generatedAt ?? 'N/A'}</p>
                       </div>
                       <div>
-                        <p className="font-medium text-muted-foreground">Available Formats</p>
+                        <p className="text-muted-foreground font-medium">Available Formats</p>
                         <div className="mt-1 flex flex-wrap gap-1.5">
                           {report.formats.length > 0 ? (
                             report.formats.map((fmt) => {
@@ -176,7 +179,7 @@ export default function ReportsPage() {
                                     e.stopPropagation();
                                     handleDownload(report.id, fmt);
                                   }}
-                                  className="inline-flex items-center gap-1 rounded-md border bg-background px-2.5 py-1 text-xs font-medium hover:bg-muted transition-colors"
+                                  className="bg-background hover:bg-muted inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors"
                                 >
                                   <Icon className="h-3 w-3" />
                                   {fmt}
@@ -193,13 +196,13 @@ export default function ReportsPage() {
                     <div className="mt-4 flex gap-2">
                       <Link
                         href={`/dashboard/audits/${report.auditId}`}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
                       >
                         <Eye className="h-4 w-4" /> View Audit
                       </Link>
                       <button
                         onClick={() => handleShare(report.id)}
-                        className="inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+                        className="hover:bg-muted inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
                       >
                         <Share2 className="h-4 w-4" /> Share
                       </button>

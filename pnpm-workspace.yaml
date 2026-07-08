@@ -1,8 +1,8 @@
 packages:
-  - "apps/*"
-  - "packages/*"
-  - "packages/config/*"
-  - "plugins/*"
-  - "contracts/*"
-  - "examples/*"
-  - "tooling/*"
+  - 'apps/*'
+  - 'packages/*'
+  - 'packages/config/*'
+  - 'plugins/*'
+  - 'contracts/*'
+  - 'examples/*'
+  - 'tooling/*'

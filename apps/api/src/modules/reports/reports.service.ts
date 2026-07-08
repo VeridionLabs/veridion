@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { logger } from '@veridion/logger';
+
+import { PrismaService } from '../../common/prisma/prisma.service';
 import type { GenerateReportDto } from './dto/report.dto';
 
 @Injectable()
@@ -25,7 +26,8 @@ export class ReportsService {
       auditId: audit.id,
       projectName: audit.project.name,
       securityScore: audit.securityScore ?? 0,
-      findings: audit.findings.map((f) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      findings: audit.findings.map((f: any) => ({
         id: f.id,
         title: f.title,
         description: f.description,

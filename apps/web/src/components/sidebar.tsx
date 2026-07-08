@@ -1,13 +1,21 @@
 'use client';
 
+import {
+  Bell,
+  ChevronLeft,
+  FileSearch,
+  FileText,
+  FolderOpen,
+  LayoutDashboard,
+  MessageSquare,
+  Settings,
+  Shield,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import {
-  LayoutDashboard, FolderOpen, FileSearch, MessageSquare,
-  FileText, Settings, Bell, Shield, ChevronLeft,
-} from 'lucide-react';
 import { useState } from 'react';
+
+import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -23,22 +31,21 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <aside className={cn(
-      'flex h-full flex-col border-r bg-card transition-all duration-300',
-      collapsed ? 'w-16' : 'w-64',
-    )}>
+    <aside
+      className={cn(
+        'bg-card flex h-full flex-col border-r transition-all duration-300',
+        collapsed ? 'w-16' : 'w-64',
+      )}
+    >
       <div className="flex h-14 items-center justify-between border-b px-4">
         {!collapsed && (
           <Link href="/dashboard" className="flex items-center gap-2 font-bold">
-            <Shield className="h-6 w-6 text-primary" />
+            <Shield className="text-primary h-6 w-6" />
             <span className="text-lg">Veridion</span>
           </Link>
         )}
-        {collapsed && <Shield className="mx-auto h-6 w-6 text-primary" />}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="rounded-md p-1 hover:bg-muted"
-        >
+        {collapsed && <Shield className="text-primary mx-auto h-6 w-6" />}
+        <button onClick={() => setCollapsed(!collapsed)} className="hover:bg-muted rounded-md p-1">
           <ChevronLeft className={cn('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
         </button>
       </div>
@@ -66,11 +73,11 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t p-2 space-y-1">
+      <div className="space-y-1 border-t p-2">
         <Link
           href="/dashboard/notifications"
           className={cn(
-            'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors',
+            'text-muted-foreground hover:bg-muted hover:text-foreground flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
             collapsed && 'justify-center px-2',
           )}
         >

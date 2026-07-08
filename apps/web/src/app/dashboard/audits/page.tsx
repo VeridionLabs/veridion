@@ -1,10 +1,42 @@
-import { Shield, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock, Shield, XCircle } from 'lucide-react';
 
 const audits = [
-  { id: '1', project: 'DeFi Protocol v2', status: 'COMPLETED', score: 82, findings: 14, date: '2024-06-15', hash: '0xabc...def' },
-  { id: '2', project: 'NFT Marketplace', status: 'SCANNING', score: null, findings: null, date: '2024-06-10', hash: '0x123...456' },
-  { id: '3', project: 'Staking Rewards', status: 'VERIFIED', score: 93, findings: 3, date: '2024-05-28', hash: '0x789...012' },
-  { id: '4', project: 'Token Vesting', status: 'FAILED', score: null, findings: null, date: '2024-05-20', hash: '0xdef...abc' },
+  {
+    id: '1',
+    project: 'DeFi Protocol v2',
+    status: 'COMPLETED',
+    score: 82,
+    findings: 14,
+    date: '2024-06-15',
+    hash: '0xabc...def',
+  },
+  {
+    id: '2',
+    project: 'NFT Marketplace',
+    status: 'SCANNING',
+    score: null,
+    findings: null,
+    date: '2024-06-10',
+    hash: '0x123...456',
+  },
+  {
+    id: '3',
+    project: 'Staking Rewards',
+    status: 'VERIFIED',
+    score: 93,
+    findings: 3,
+    date: '2024-05-28',
+    hash: '0x789...012',
+  },
+  {
+    id: '4',
+    project: 'Token Vesting',
+    status: 'FAILED',
+    score: null,
+    findings: null,
+    date: '2024-05-20',
+    hash: '0xdef...abc',
+  },
 ];
 
 const statusIcon = {
@@ -31,12 +63,12 @@ export default function AuditsPage() {
         <p className="text-muted-foreground mt-1">Review past audits and their findings.</p>
       </div>
 
-      <div className="rounded-xl border bg-card">
+      <div className="bg-card rounded-xl border">
         <div className="p-6">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b text-left text-sm text-muted-foreground">
+                <tr className="text-muted-foreground border-b text-left text-sm">
                   <th className="pb-3 font-medium">Project</th>
                   <th className="pb-3 font-medium">Status</th>
                   <th className="pb-3 font-medium">Score</th>
@@ -47,9 +79,11 @@ export default function AuditsPage() {
               <tbody className="divide-y">
                 {audits.map((audit) => {
                   const Icon = statusIcon[audit.status as keyof typeof statusIcon] ?? Clock;
-                  const color = statusColor[audit.status as keyof typeof statusColor] ?? 'text-muted-foreground';
+                  const color =
+                    statusColor[audit.status as keyof typeof statusColor] ??
+                    'text-muted-foreground';
                   return (
-                    <tr key={audit.id} className="text-sm hover:bg-muted/50 transition-colors">
+                    <tr key={audit.id} className="hover:bg-muted/50 text-sm transition-colors">
                       <td className="py-3 font-medium">{audit.project}</td>
                       <td className="py-3">
                         <span className={`inline-flex items-center gap-1 ${color}`}>
@@ -58,7 +92,7 @@ export default function AuditsPage() {
                       </td>
                       <td className="py-3">{audit.score ? `${audit.score}/100` : '—'}</td>
                       <td className="py-3">{audit.findings ?? '—'}</td>
-                      <td className="py-3 text-muted-foreground">{audit.date}</td>
+                      <td className="text-muted-foreground py-3">{audit.date}</td>
                     </tr>
                   );
                 })}

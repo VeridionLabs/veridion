@@ -17,9 +17,12 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <div key={stat.label} className="rounded-xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
+          <div
+            key={stat.label}
+            className="bg-card rounded-xl border p-6 shadow-sm transition-shadow hover:shadow-md"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">{stat.label}</span>
+              <span className="text-muted-foreground text-sm font-medium">{stat.label}</span>
               <stat.icon className={`h-5 w-5 ${stat.color}`} />
             </div>
             <p className="mt-2 text-3xl font-bold">{stat.value}</p>
@@ -28,13 +31,18 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border bg-card p-6 shadow-sm">
+        <div className="bg-card rounded-xl border p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Recent Audits</h2>
-          <p className="mt-4 text-sm text-muted-foreground">Connect your wallet and create a project to get started with your first smart contract audit.</p>
+          <p className="text-muted-foreground mt-4 text-sm">
+            Connect your wallet and create a project to get started with your first smart contract
+            audit.
+          </p>
         </div>
-        <div className="rounded-xl border bg-card p-6 shadow-sm">
+        <div className="bg-card rounded-xl border p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Security Score Trend</h2>
-          <p className="mt-4 text-sm text-muted-foreground">Your security score trends will appear here once you have completed audits.</p>
+          <p className="text-muted-foreground mt-4 text-sm">
+            Your security score trends will appear here once you have completed audits.
+          </p>
         </div>
       </div>
     </div>

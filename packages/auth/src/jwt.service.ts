@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default-member */
 import jwt from 'jsonwebtoken';
 
 import type { AuthConfig, JwtPayload, TokenPair } from './types';
