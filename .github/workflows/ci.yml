@@ -40,6 +40,9 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://veridion:veridion@localhost:5432/veridion_test
       - run: pnpm build:packages
       - run: pnpm typecheck
 
@@ -70,10 +73,10 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build:packages
       - run: pnpm db:generate
         env:
           DATABASE_URL: postgresql://veridion:veridion@localhost:5432/veridion_test
+      - run: pnpm build:packages
       - run: pnpm test
         env:
           DATABASE_URL: postgresql://veridion:veridion@localhost:5432/veridion_test
@@ -91,4 +94,7 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://veridion:veridion@localhost:5432/veridion_test
       - run: pnpm build
