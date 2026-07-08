@@ -29,7 +29,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@veridion/tsconfig": "workspace:*",
-    "typescript": "^5.4.5",
+    "typescript": "^7.0.2",
     "vitest": "^1.6.0"
   }
 }
