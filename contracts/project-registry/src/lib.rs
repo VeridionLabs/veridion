@@ -1,5 +1,5 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Env, String, Address, Map};
+use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Env, String, Address, Map, Vec};
 
 #[contracttype]
 #[derive(Clone, Debug, PartialEq)]
@@ -101,9 +101,13 @@ impl ProjectRegistry {
             .get(&key)
             .unwrap_or_else(|| Map::new(&env));
 
-        projects.values()
-            .filter(|r| r.owner == owner)
-            .collect()
+        let mut filtered = Vec::new(&env);
+        for record in projects.values() {
+            if record.owner == owner {
+                filtered.push_back(record);
+            }
+        }
+        filtered
     }
 
     pub fn version() -> String {

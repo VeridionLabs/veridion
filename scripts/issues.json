@@ -1,0 +1,162 @@
+[
+  {
+    "title": "Scanner: Implement Front-Running detection plugin",
+    "labels": ["enhancement", "plugin", "good first issue"],
+    "body": "## Description\nCreate a new security detection plugin for front-running vulnerabilities in smart contracts.\n\n## Files to Create\n- `plugins/front-running/package.json`\n- `plugins/front-running/tsconfig.json`\n- `plugins/front-running/vitest.config.ts`\n- `plugins/front-running/src/index.ts`\n- `plugins/front-running/src/index.test.ts`\n- `plugins/front-running/.eslintrc.js`\n\n## Files to Modify\n- `packages/scanner-core/src/plugin-registry.ts` — register the new plugin\n\n## Acceptance Criteria\n- [ ] Plugin implements `IRulePlugin` from `@veridion/scanner-types`\n- [ ] Detects transaction ordering dependency patterns\n- [ ] Detects priority gas auction vulnerabilities\n- [ ] Includes unit tests with 80%+ coverage\n- [ ] Plugin metadata includes proper severity, chains, languages, and tags\n- [ ] All tests pass with `pnpm test --filter=@veridion/plugin-front-running`\n- [ ] TypeScript compilation passes"
+  },
+  {
+    "title": "Scanner: Implement Timestamp Dependence detection plugin",
+    "labels": ["enhancement", "plugin", "good first issue"],
+    "body": "## Description\nCreate a security detection plugin that identifies reliance on block.timestamp for critical logic.\n\n## Files to Create\n- `plugins/timestamp/package.json`\n- `plugins/timestamp/tsconfig.json`\n- `plugins/timestamp/vitest.config.ts`\n- `plugins/timestamp/src/index.ts`\n- `plugins/timestamp/src/index.test.ts`\n- `plugins/timestamp/.eslintrc.js`\n\n## Files to Modify\n- `packages/scanner-core/src/plugin-registry.ts` — register the new plugin\n\n## Acceptance Criteria\n- [ ] Plugin implements `IRulePlugin` from `@veridion/scanner-types`\n- [ ] Detects `block.timestamp` usage in conditional logic\n- [ ] Detects `now` keyword usage (legacy Solidity)\n- [ ] Includes unit tests with 80%+ coverage\n- [ ] Plugin metadata includes `TIMESTAMP` category and `FindingSeverity.LOW`\n- [ ] All tests pass and TypeScript compilation succeeds"
+  },
+  {
+    "title": "Scanner: Implement Unchecked Return Value detection plugin",
+    "labels": ["enhancement", "plugin", "good first issue"],
+    "body": "## Description\nCreate a plugin that detects calls to `.send()`, `.call()`, `.transfer()` where the return value is not checked.\n\n## Files to Create\n- `plugins/unchecked-return/package.json`\n- `plugins/unchecked-return/tsconfig.json`\n- `plugins/unchecked-return/vitest.config.ts`\n- `plugins/unchecked-return/src/index.ts`\n- `plugins/unchecked-return/src/index.test.ts`\n- `plugins/unchecked-return/.eslintrc.js`\n\n## Files to Modify\n- `packages/scanner-core/src/plugin-registry.ts` — register the new plugin\n\n## Acceptance Criteria\n- [ ] Plugin implements `IRulePlugin` from `@veridion/scanner-types`\n- [ ] Detects unchecked `address.call()` return values\n- [ ] Detects unchecked `address.send()` return values\n- [ ] Detects unchecked `address.delegatecall()` return values\n- [ ] Provides fix recommendations using `require(success)` pattern\n- [ ] Includes unit tests with 80%+ coverage"
+  },
+  {
+    "title": "Scanner: Implement Uninitialized Storage Pointer detection plugin",
+    "labels": ["enhancement", "plugin"],
+    "body": "## Description\nCreate a plugin that detects uninitialized storage pointers in Solidity which can lead to unexpected storage corruption.\n\n## Files to Create\n- `plugins/storage-pointer/package.json`\n- `plugins/storage-pointer/tsconfig.json`\n- `plugins/storage-pointer/vitest.config.ts`\n- `plugins/storage-pointer/src/index.ts`\n- `plugins/storage-pointer/src/index.test.ts`\n- `plugins/storage-pointer/.eslintrc.js`\n\n## Files to Modify\n- `packages/scanner-core/src/plugin-registry.ts` — register the new plugin\n\n## Acceptance Criteria\n- [ ] Plugin implements `IRulePlugin` from `@veridion/scanner-types`\n- [ ] Detects struct/array declarations in functions without explicit storage/memory keyword\n- [ ] Detects assignments to storage references that may overwrite unexpected slots\n- [ ] Includes unit tests with 80%+ coverage\n- [ ] All tests pass and TypeScript compilation succeeds"
+  },
+  {
+    "title": "Scanner: Implement Short Address Attack detection plugin",
+    "labels": ["enhancement", "plugin"],
+    "body": "## Description\nCreate a plugin that detects contracts vulnerable to short address attacks on EVM chains.\n\n## Files to Create\n- `plugins/short-address/package.json`\n- `plugins/short-address/tsconfig.json`\n- `plugins/short-address/vitest.config.ts`\n- `plugins/short-address/src/index.ts`\n- `plugins/short-address/src/index.test.ts`\n- `plugins/short-address/.eslintrc.js`\n\n## Files to Modify\n- `packages/scanner-core/src/plugin-registry.ts` — register the new plugin\n\n## Acceptance Criteria\n- [ ] Plugin implements `IRulePlugin` from `@veridion/scanner-types`\n- [ ] Detects `msg.sender` used in ABI-encoded call data without padding validation\n- [ ] Detects missing input length validation on external functions\n- [ ] Includes unit tests with 80%+ coverage"
+  },
+  {
+    "title": "Scanner: Implement Upgrade Proxy vulnerability detection plugin",
+    "labels": ["enhancement", "plugin"],
+    "body": "## Description\nCreate a plugin that detects common vulnerabilities in upgradeable proxy contracts.\n\n## Files to Create\n- `plugins/upgrade-proxy/package.json`\n- `plugins/upgrade-proxy/tsconfig.json`\n- `plugins/upgrade-proxy/vitest.config.ts`\n- `plugins/upgrade-proxy/src/index.ts`\n- `plugins/upgrade-proxy/src/index.test.ts`\n- `plugins/upgrade-proxy/.eslintrc.js`\n\n## Files to Modify\n- `packages/scanner-core/src/plugin-registry.ts` — register the new plugin\n\n## Acceptance Criteria\n- [ ] Plugin implements `IRulePlugin` from `@veridion/scanner-types`\n- [ ] Detects storage collisions between proxy and implementation\n- [ ] Detects missing `_disableInitializers()` in constructors\n- [ ] Detects UUPS vs transparent proxy misconfigurations\n- [ ] Includes unit tests with 80%+ coverage"
+  },
+  {
+    "title": "Scanner: Add result deduplication to ResultAggregator",
+    "labels": ["enhancement", "scanner"],
+    "body": "## Description\nThe `ResultAggregator` should deduplicate findings that are reported by multiple plugins for the same code location.\n\n## Files to Modify\n- `packages/scanner-core/src/result-aggregator.ts` — add deduplication logic\n- `packages/scanner-core/src/result-aggregator.test.ts` — add deduplication tests (create if missing)\n\n## Acceptance Criteria\n- [ ] Findings at the same file, line range, and category are deduplicated\n- [ ] Higher-severity finding is kept when duplicates exist\n- [ ] `deduplicateFindings()` method is added to `ResultAggregator`\n- [ ] Summary counts reflect deduplicated results\n- [ ] Unit tests cover: duplicates with same severity, different severity, different locations\n- [ ] Existing tests continue to pass"
+  },
+  {
+    "title": "Scanner: Add plugin configuration system with per-plugin settings",
+    "labels": ["enhancement", "scanner"],
+    "body": "## Description\nEnable per-plugin configuration (e.g., severity overrides, enabled/disabled, custom thresholds) via the `PluginRegistry`.\n\n## Files to Modify\n- `packages/scanner-core/src/plugin-registry.ts` — add config support\n- `packages/scanner-core/src/scanner.ts` — pass config to plugins\n- `packages/scanner-types/src/index.ts` — extend `IRulePlugin` or add config types\n\n## Acceptance Criteria\n- [ ] `PluginRegistry.register()` accepts an optional config object\n- [ ] Plugin config can override severity of findings\n- [ ] Plugin config can disable specific detection patterns within a plugin\n- [ ] Config is validated against a schema defined in plugin metadata\n- [ ] `getPluginConfig(pluginId)` method retrieves current config\n- [ ] Unit tests cover config registration, retrieval, and overrides\n- [ ] Backward compatible — existing plugins work without config"
+  },
+  {
+    "title": "API: Implement real Soroban blockchain service integration",
+    "labels": ["enhancement", "api", "blockchain"],
+    "body": "## Description\nReplace the stub implementation in `BlockchainService` with actual Stellar Soroban contract interaction using the deployed testnet contracts.\n\n## Files to Modify\n- `apps/api/src/modules/blockchain/blockchain.service.ts` — implement real contract calls\n- `apps/api/src/modules/blockchain/dto/blockchain.dto.ts` — update DTOs if needed\n- `apps/api/src/modules/blockchain/blockchain.module.ts` — add any new providers\n\n## New files potentially needed\n- `apps/api/src/modules/blockchain/soroban-client.ts` — Soroban RPC client wrapper\n\n## Acceptance Criteria\n- [ ] Calls `register_audit` on the deployed audit-registry contract (ID: `CDZLMOM3IPXG7FFHMVYGR3LFU6L36WQAMXGCRY2BYHSRCYRYAOVYPIWL`)\n- [ ] Calls `verify_audit` on the deployed verifier contract (ID: `CBCMGBNKFABLSPUFR2D344HC6Z42C5FTLOZUTA3PCIYYE45AVD3RI5OP`)\n- [ ] Uses `stellar-sdk` or `@stellar/stellar-sdk` for transaction building\n- [ ] Transaction status is updated in the database after on-chain confirmation\n- [ ] Handles network errors gracefully with retries\n- [ ] Uses environment variables for contract IDs and network config\n- [ ] Unit tests mock the Stellar SDK"
+  },
+  {
+    "title": "API: Implement real AI chat service with provider integration",
+    "labels": ["enhancement", "api", "ai"],
+    "body": "## Description\nThe `AiService` in `apps/api` currently returns a stub response. Integrate with `@veridion/ai-engine` for real AI-powered analysis.\n\n## Files to Modify\n- `apps/api/src/modules/ai/ai.service.ts` — replace stub with real AI engine calls\n- `apps/api/src/modules/ai/ai.module.ts` — import AI engine package\n- `apps/api/src/modules/ai/dto/ai.dto.ts` — update if needed\n\n## Acceptance Criteria\n- [ ] Uses `@veridion/ai-engine` to process chat messages\n- [ ] Maintains conversation context for follow-up questions\n- [ ] Citations include finding IDs, line numbers, and code snippets\n- [ ] AI responses reference actual audit findings from the database\n- [ ] Rate limiting prevents abuse\n- [ ] Error handling for provider outages\n- [ ] Unit tests mock the AI engine provider"
+  },
+  {
+    "title": "API: Add BullMQ queue system for async scan job processing",
+    "labels": ["enhancement", "api", "infrastructure"],
+    "body": "## Description\nAdd a BullMQ-based job queue for processing scan jobs asynchronously. Currently scan jobs appear to be synchronous.\n\n## Files to Modify\n- `apps/api/src/modules/audits/audits.service.ts` — enqueue scan jobs\n- `apps/api/src/app.module.ts` — register BullMQ module\n\n## Files to Create\n- `apps/api/src/modules/audits/audits.processor.ts` — BullMQ job processor\n- `apps/api/src/modules/audits/audits.queue.ts` — queue definition\n\n## Acceptance Criteria\n- [ ] `POST /audits` enqueues a job instead of synchronous processing\n- [ ] Job processor runs the scanner and AI analysis asynchronously\n- [ ] Audit status transitions: PENDING → SCANNING → AI_REVIEW → COMPLETED\n- [ ] Failed jobs are retried up to 3 times with exponential backoff\n- [ ] Redis connection is configured for BullMQ\n- [ ] Job progress is trackable via audit status updates\n- [ ] Unit and integration tests for queue flow"
+  },
+  {
+    "title": "API: Add rate limiting middleware with Redis",
+    "labels": ["enhancement", "api", "security"],
+    "body": "## Description\nImplement rate limiting on all API endpoints using Redis-backed throttling to prevent abuse.\n\n## Files to Create\n- `apps/api/src/common/throttle/throttle.guard.ts` — rate limit guard\n- `apps/api/src/common/throttle/throttle.module.ts` — module definition\n\n## Files to Modify\n- `apps/api/src/app.module.ts` — apply global rate limiting\n\n## Acceptance Criteria\n- [ ] Default rate limit: 100 requests per minute per IP\n- [ ] Higher limits for authenticated users (200/min)\n- [ ] Special limits for AI endpoints (20/min)\n- [ ] Uses Redis for distributed rate limiting across instances\n- [ ] Returns `429 Too Many Requests` with `Retry-After` header\n- [ ] Works behind reverse proxies (X-Forwarded-For)\n- [ ] Configurable via environment variables\n- [ ] Unit tests for rate limit logic"
+  },
+  {
+    "title": "API: Add email notification service (welcome, audit complete, verification)",
+    "labels": ["enhancement", "api", "notifications"],
+    "body": "## Description\nAdd email notification capabilities for key events: welcome emails, audit completion, blockchain verification confirmations.\n\n## Files to Modify\n- `apps/api/src/modules/notifications/notifications.service.ts` — add email sending\n- `apps/api/src/modules/notifications/notifications.module.ts` — register email provider\n\n## Files to Create\n- `apps/api/src/modules/notifications/email.service.ts` — email sending logic\n- `apps/api/src/modules/notifications/templates/` — email templates\n\n## Acceptance Criteria\n- [ ] Welcome email sent on user registration\n- [ ] Audit completion notification with summary and link\n- [ ] Blockchain verification confirmation email\n- [ ] Uses a transactional email provider (Resend, SendGrid, or SES)\n- [ ] Email provider configured via environment variables\n- [ ] HTML and plain text versions of emails\n- [ ] Email sending failures do not block API responses (fire-and-forget)\n- [ ] Unit tests with mocked email provider"
+  },
+  {
+    "title": "API: Implement API key management (CRUD, permissions, revocation)",
+    "labels": ["enhancement", "api", "security"],
+    "body": "## Description\nAdd full API key management endpoints: create, list, revoke, and update permissions. The Prisma schema already has an `ApiKey` model.\n\n## Files to Create\n- `apps/api/src/modules/api-keys/api-keys.controller.ts`\n- `apps/api/src/modules/api-keys/api-keys.service.ts`\n- `apps/api/src/modules/api-keys/api-keys.module.ts`\n- `apps/api/src/modules/api-keys/dto/api-key.dto.ts`\n\n## Acceptance Criteria\n- [ ] `POST /api-keys` — create a new API key with specified permissions\n- [ ] `GET /api-keys` — list all API keys for the authenticated user\n- [ ] `DELETE /api-keys/:id` — revoke an API key\n- [ ] `PATCH /api-keys/:id` — update permissions\n- [ ] API keys are hashed before storage (only shown once at creation)\n- [ ] Permission validation matches roles (USER, AUDITOR, ADMIN scopes)\n- [ ] API key authentication works via `X-API-Key` header\n- [ ] Unit tests for CRUD operations"
+  },
+  {
+    "title": "API: Add audit log querying and filtering endpoints",
+    "labels": ["enhancement", "api"],
+    "body": "## Description\nCreate endpoints to query and filter the `AuditLog` model (already in Prisma schema) for compliance and debugging.\n\n## Files to Create\n- `apps/api/src/modules/audit-log/audit-log.controller.ts`\n- `apps/api/src/modules/audit-log/audit-log.service.ts`\n- `apps/api/src/modules/audit-log/audit-log.module.ts`\n- `apps/api/src/modules/audit-log/dto/audit-log.dto.ts`\n\n## Acceptance Criteria\n- [ ] `GET /audit-logs` — paginated list with filters (userId, action, entityType, date range)\n- [ ] `GET /audit-logs/:id` — single log entry details\n- [ ] Admin-only access to all logs\n- [ ] Users can only see their own logs (unless ADMIN)\n- [ ] Supports export as CSV\n- [ ] Audit log entries are automatically created on key actions (audit create, project update, etc.)\n- [ ] Unit tests for filtering and authorization"
+  },
+  {
+    "title": "API: Add organization management endpoints",
+    "labels": ["enhancement", "api", "organizations"],
+    "body": "## Description\nImplement organization CRUD and membership management. The Prisma schema already has `Organization` and `OrganizationMember` models.\n\n## Files to Create\n- `apps/api/src/modules/organizations/organizations.controller.ts`\n- `apps/api/src/modules/organizations/organizations.service.ts`\n- `apps/api/src/modules/organizations/organizations.module.ts`\n- `apps/api/src/modules/organizations/dto/organization.dto.ts`\n\n## Acceptance Criteria\n- [ ] `POST /organizations` — create organization (user becomes OWNER)\n- [ ] `GET /organizations` — list user's organizations\n- [ ] `GET /organizations/:id` — get organization detail with members\n- [ ] `PATCH /organizations/:id` — update org details (OWNER/ADMIN only)\n- [ ] `POST /organizations/:id/members` — invite member\n- [ ] `DELETE /organizations/:id/members/:userId` — remove member\n- [ ] `PATCH /organizations/:id/members/:userId` — change member role\n- [ ] Organization slug is unique and auto-generated from name\n- [ ] Unit tests for all endpoints and authorization"
+  },
+  {
+    "title": "Web: Connect Dashboard stats to real API data",
+    "labels": ["enhancement", "frontend", "good first issue"],
+    "body": "## Description\nThe Dashboard page (`apps/web/src/app/dashboard/page.tsx`) currently shows hardcoded stats. Connect it to the real API.\n\n## Files to Modify\n- `apps/web/src/app/dashboard/page.tsx` — fetch stats from API\n- `apps/api/src/modules/health/health.controller.ts` — optionally add a stats endpoint\n\n## Acceptance Criteria\n- [ ] Total Projects count fetched from `GET /projects`\n- [ ] Audits Completed count fetched from `GET /audits` with status filter\n- [ ] Vulnerabilities Found count fetched from real audit findings\n- [ ] Average Security Score computed from actual audit scores\n- [ ] Loading skeleton shown while data fetches\n- [ ] Error state shown if API is unavailable\n- [ ] Stats update on navigation (TanStack Query or similar)"
+  },
+  {
+    "title": "Web: Implement full Projects CRUD pages",
+    "labels": ["enhancement", "frontend"],
+    "body": "## Description\nThe projects pages are stubs. Implement full list, create, and detail views connected to the API.\n\n## Files to Modify\n- `apps/web/src/app/dashboard/projects/page.tsx` — list view with search, pagination\n- `apps/web/src/app/dashboard/projects/new/page.tsx` — create form\n- `apps/web/src/app/dashboard/projects/[id]/page.tsx` — detail view with contracts and audits\n\n## Files to Create\n- `apps/web/src/components/projects/project-card.tsx` — reusable card component\n- `apps/web/src/components/projects/project-form.tsx` — create/edit form\n\n## Acceptance Criteria\n- [ ] Projects list with search, pagination, and empty state\n- [ ] Create project form with validation (name, chain, language, description, repo URL)\n- [ ] Project detail page shows contracts, audits, and security score\n- [ ] Edit and delete project actions\n- [ ] Responsive design matching existing dashboard layout\n- [ ] Loading, empty, and error states handled\n- [ ] Form validation using Zod schemas from `@veridion/shared`"
+  },
+  {
+    "title": "Web: Implement Audit detail page with findings view",
+    "labels": ["enhancement", "frontend", "good first issue"],
+    "body": "## Description\nThe audit detail page (`audits/[id]/page.tsx`) is a stub. Implement a rich detail view showing findings, severity breakdown, and actions.\n\n## Files to Modify\n- `apps/web/src/app/dashboard/audits/[id]/page.tsx` — full implementation\n- `apps/web/src/app/dashboard/audits/page.tsx` — audit list improvements\n\n## Files to Create\n- `apps/web/src/components/audits/finding-list.tsx` — findings list with filtering\n- `apps/web/src/components/audits/finding-card.tsx` — individual finding display\n- `apps/web/src/components/audits/severity-chart.tsx` — severity distribution chart\n\n## Acceptance Criteria\n- [ ] Shows audit metadata (project, date, status, security score)\n- [ ] Findings grouped by severity with expandable cards\n- [ ] Each finding shows: title, description, code snippet, recommendation, AI summary\n- [ ] Filter findings by severity, plugin, status\n- [ ] Update finding status (OPEN, ACKNOWLEDGED, FALSE_POSITIVE, RESOLVED)\n- [ ] Request blockchain verification button\n- [ ] Loading, empty, and error states"
+  },
+  {
+    "title": "Web: Implement real AI chat page with API integration",
+    "labels": ["enhancement", "frontend", "ai"],
+    "body": "## Description\nThe AI chat page (`ai-chat/page.tsx`) is a stub. Build a real chat interface integrated with the AI endpoints.\n\n## Files to Modify\n- `apps/web/src/app/dashboard/ai-chat/page.tsx` — full chat implementation\n\n## Files to Create\n- `apps/web/src/components/ai-chat/chat-messages.tsx` — message list\n- `apps/web/src/components/ai-chat/chat-input.tsx` — input with context selection\n- `apps/web/src/components/ai-chat/chat-context.tsx` — audit/finding context selector\n\n## Acceptance Criteria\n- [ ] Chat interface with message history\n- [ ] Select an audit as context for the conversation\n- [ ] Messages display citations (finding ID, line numbers)\n- [ ] Streaming or polling for real-time responses\n- [ ] Code snippets are syntax-highlighted\n- [ ] Loading state while AI responds\n- [ ] Empty state when no messages\n- [ ] Error handling for API failures"
+  },
+  {
+    "title": "Web: Implement Reports page with generation and history",
+    "labels": ["enhancement", "frontend", "good first issue"],
+    "body": "## Description\nBuild the Reports page to generate, view, and download audit reports in multiple formats.\n\n## Files to Modify\n- `apps/web/src/app/dashboard/reports/page.tsx` — full implementation\n\n## Files to Create\n- `apps/web/src/components/reports/report-generator.tsx` — report generation form\n- `apps/web/src/components/reports/report-preview.tsx` — inline report preview\n\n## Acceptance Criteria\n- [ ] Select audit from dropdown to generate report\n- [ ] Choose format: JSON, Markdown, HTML (PDF placeholder)\n- [ ] Toggle AI summary inclusion\n- [ ] Preview report inline before downloading\n- [ ] Download report as file with correct extension\n- [ ] Report history showing previously generated reports\n- [ ] Loading, empty, and error states\n- [ ] Reports respect the existing formatter infrastructure in `@veridion/report-generator`"
+  },
+  {
+    "title": "Web: Implement authentication flow (login/register pages connected to API)",
+    "labels": ["enhancement", "frontend", "auth"],
+    "body": "## Description\nThe login and register pages exist as stubs. Connect them to the real API and implement auth state management.\n\n## Files to Modify\n- `apps/web/src/app/login/page.tsx` — connect to API\n- `apps/web/src/app/register/page.tsx` — connect to API\n- `apps/web/src/components/query-provider.tsx` — add auth context\n\n## Files to Create\n- `apps/web/src/lib/auth.tsx` — auth context/provider\n- `apps/web/src/components/auth/protected-route.tsx` — route protection wrapper\n- `apps/web/src/hooks/use-auth.ts` — auth hook\n\n## Acceptance Criteria\n- [ ] Login form submits to `POST /auth/login`\n- [ ] Register form submits to `POST /auth/register`\n- [ ] JWT token stored securely (httpOnly cookie or memory with refresh)\n- [ ] Protected routes redirect to login if unauthenticated\n- [ ] Dashboard layout shows user info and logout button\n- [ ] Token refresh on expiry\n- [ ] Form validation using Zod schemas from `@veridion/shared`\n- [ ] Error messages displayed for invalid credentials\n- [ ] Loading states on form submission"
+  },
+  {
+    "title": "Web: Implement Notifications page with real data",
+    "labels": ["enhancement", "frontend", "good first issue"],
+    "body": "## Description\nBuild the Notifications page connected to the API with mark-read and filtering functionality.\n\n## Files to Modify\n- `apps/web/src/app/dashboard/notifications/page.tsx` — full implementation\n\n## Acceptance Criteria\n- [ ] Lists notifications from `GET /notifications`\n- [ ] Grouped by read/unread\n- [ ] Click to mark as read via `PATCH /notifications/:id/read`\n- [ ] Visual distinction between read and unread\n- [ ] Notification types (INFO, SUCCESS, WARNING, ERROR) have distinct styling\n- [ ] Relative timestamps (\"2 hours ago\")\n- [ ] Clickable links in notifications\n- [ ] Empty state when no notifications\n- [ ] Loading state"
+  },
+  {
+    "title": "Web: Implement Settings page (profile, wallet, API keys)",
+    "labels": ["enhancement", "frontend"],
+    "body": "## Description\nBuild the Settings page with user profile editing, wallet address management, and API key management.\n\n## Files to Modify\n- `apps/web/src/app/dashboard/settings/page.tsx` — full implementation\n\n## Files to Create\n- `apps/web/src/components/settings/profile-form.tsx` — profile editing\n- `apps/web/src/components/settings/api-keys-list.tsx` — API key management\n- `apps/web/src/components/settings/wallet-section.tsx` — wallet address\n\n## Acceptance Criteria\n- [ ] Edit display name and avatar URL\n- [ ] Add/update Stellar wallet address\n- [ ] View and revoke API keys (if API key module is built)\n- [ ] Form validation\n- [ ] Success toast on save\n- [ ] Loading states\n- [ ] Error handling"
+  },
+  {
+    "title": "Database: Set up Prisma migrations and seed scripts",
+    "labels": ["enhancement", "database", "infrastructure"],
+    "body": "## Description\nCreate Prisma migration infrastructure and a comprehensive seed script for development.\n\n## Files to Create\n- `packages/database/prisma/migrations/` — initial migration\n- `packages/database/prisma/seed.ts` — seed script with sample data\n- `packages/database/package.json` — add seed script if not present\n\n## Acceptance Criteria\n- [ ] Initial migration generated from current schema\n- [ ] Seed script creates: 2 users (admin, regular), 3 projects, 5 audits with findings\n- [ ] Seed data includes various finding severities and statuses\n- [ ] Seed data includes sample notifications\n- [ ] `pnpm db:migrate` runs migrations\n- [ ] `pnpm db:seed` seeds the database\n- [ ] `pnpm db:reset` drops, migrates, and seeds\n- [ ] Idempotent — can run seed multiple times without errors"
+  },
+  {
+    "title": "Infrastructure: Add Redis caching layer to NestJS API",
+    "labels": ["enhancement", "infrastructure", "performance"],
+    "body": "## Description\nAdd Redis caching for frequently accessed data like audit summaries, user profiles, and plugin metadata.\n\n## Files to Create\n- `apps/api/src/common/cache/cache.module.ts` — Redis cache module\n- `apps/api/src/common/cache/cache.service.ts` — cache wrapper service\n\n## Files to Modify\n- `apps/api/src/modules/audits/audits.service.ts` — cache audit results\n- `apps/api/src/modules/projects/projects.service.ts` — cache project lists\n\n## Acceptance Criteria\n- [ ] Redis connection configured via environment variables\n- [ ] Cache TTL configurable per entity type\n- [ ] Cache invalidation on write operations\n- [ ] Cache decorator or interceptor for easy use\n- [ ] Falls back gracefully when Redis is unavailable\n- [ ] Cache hit/miss logging for monitoring\n- [ ] Unit tests with mocked Redis client"
+  },
+  {
+    "title": "Infrastructure: Complete Docker Compose for full-stack development",
+    "labels": ["enhancement", "infrastructure", "devops"],
+    "body": "## Description\nEnsure `docker-compose.yml` covers all services needed for development: PostgreSQL, Redis, API, Web, and contract build environment.\n\n## Files to Modify\n- `docker-compose.yml` — add Redis, web app service, API service, optional Soroban RPC\n- `docker/Dockerfile.api` — ensure production-ready\n- `docker/Dockerfile.web` — ensure production-ready\n\n## Acceptance Criteria\n- [ ] `docker compose up -d` starts PostgreSQL, Redis, API, and Web\n- [ ] API accessible at `http://localhost:4000`\n- [ ] Web accessible at `http://localhost:3000`\n- [ ] Database migrations run automatically on API startup\n- [ ] Health checks configured for all services\n- [ ] Volumes configured for persistent data\n- [ ] Environment variables documented with defaults\n- [ ] Works on fresh clone with no manual setup steps"
+  },
+  {
+    "title": "Infrastructure: Add environment variable validation and documentation",
+    "labels": ["enhancement", "infrastructure", "documentation"],
+    "body": "## Description\nAdd runtime validation for environment variables using Zod and create a `.env.example` file documenting all required variables.\n\n## Files to Create\n- `.env.example` — documented example with all variables\n- `apps/api/src/config/validation.ts` — Zod env schema validation\n- `apps/web/src/config/validation.ts` — frontend env validation (public vars)\n\n## Files to Modify\n- `apps/api/src/main.ts` — validate env on startup\n\n## Acceptance Criteria\n- [ ] `.env.example` includes ALL environment variables with descriptions\n- [ ] Variables grouped by service: Database, Auth, AI, Blockchain, Redis, Email\n- [ ] Required vs optional clearly marked\n- [ ] API validates env vars on startup and throws if required ones are missing\n- [ ] Web validates `NEXT_PUBLIC_*` vars at build time\n- [ ] Validation includes type checking (URL format, enum values, port ranges)"
+  },
+  {
+    "title": "Testing: Add comprehensive E2E tests with Playwright",
+    "labels": ["enhancement", "testing"],
+    "body": "## Description\nCreate E2E test suites using Playwright for critical user flows.\n\n## Files to Create\n- `apps/web/e2e/auth.spec.ts` — login/register flows\n- `apps/web/e2e/projects.spec.ts` — project CRUD flow\n- `apps/web/e2e/audits.spec.ts` — audit creation and viewing\n- `apps/web/e2e/dashboard.spec.ts` — dashboard navigation\n- `apps/web/playwright.config.ts` — update if needed\n\n## Acceptance Criteria\n- [ ] Auth flow: register → login → access dashboard → logout\n- [ ] Projects flow: create project → view list → view detail → edit → delete\n- [ ] Audits flow: create audit → view findings → update finding status → generate report\n- [ ] Dashboard: verify navigation, stats, and responsive layout\n- [ ] Tests run in CI (`ci.yml`)\n- [ ] Tests use a seeded test database\n- [ ] Screenshot on failure for debugging"
+  },
+  {
+    "title": "CI/CD: Add Smart Contract build and test to CI pipeline",
+    "labels": ["enhancement", "ci-cd", "blockchain"],
+    "body": "## Description\nAdd Rust/Soroban contract compilation and testing to the GitHub Actions CI pipeline.\n\n## Files to Modify\n- `.github/workflows/ci.yml` — add contract build and test jobs\n\n## Acceptance Criteria\n- [ ] Rust toolchain installed in CI (stable)\n- [ ] `wasm32v1-none` target added\n- [ ] All three contracts build successfully\n- [ ] Contract unit tests run (`cargo test`)\n- [ ] Contract build artifacts cached between runs\n- [ ] Job fails if contracts don't compile\n- [ ] Job fails if tests don't pass\n- [ ] Contract linting with `cargo clippy`"
+  },
+  {
+    "title": "Documentation: Set up Swagger/OpenAPI documentation for the API",
+    "labels": ["enhancement", "documentation", "api"],
+    "body": "## Description\nAdd Swagger UI to the NestJS API for interactive API documentation.\n\n## Files to Modify\n- `apps/api/src/main.ts` — add Swagger setup\n- `apps/api/package.json` — add swagger dependencies\n\n## Acceptance Criteria\n- [ ] Swagger UI accessible at `/api/docs`\n- [ ] All endpoints documented with request/response schemas\n- [ ] Authentication schemes documented (Bearer JWT, API Key)\n- [ ] DTOs decorated with `@ApiProperty()` for schema generation\n- [ ] Controllers decorated with `@ApiTags()` for grouping\n- [ ] Example requests/responses shown\n- [ ] Swagger JSON available at `/api/docs-json` for SDK generation"
+  },
+  {
+    "title": "Documentation: Create plugin development guide and contributing docs",
+    "labels": ["enhancement", "documentation", "good first issue"],
+    "body": "## Description\nCreate comprehensive documentation for developing new security plugins.\n\n## Files to Create\n- `docs/plugins.md` — plugin development guide\n- `docs/plugin-example.md` — walkthrough of creating a plugin\n\n## Files to Modify\n- `CONTRIBUTING.md` — add plugin contribution section\n\n## Acceptance Criteria\n- [ ] Step-by-step guide to create a new plugin\n- [ ] `IRulePlugin` interface fully documented\n- [ ] `PluginMetadata` fields explained\n- [ ] How to write `analyze()` and `supportsContext()`\n- [ ] Testing guide with examples\n- [ ] Registration in plugin registry explained\n- [ ] Code snippets and best practices\n- [ ] Links to existing plugins as reference implementations"
+  }
+]
