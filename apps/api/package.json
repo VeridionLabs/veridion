@@ -4,7 +4,7 @@
   "private": true,
   "description": "Veridion API - NestJS backend",
   "scripts": {
-    "dev": "nest start --watch",
+    "dev": "node node_modules/@nestjs/cli/bin/nest.js start --watch",
     "build": "nest build",
     "start": "node dist/main",
     "start:prod": "node dist/main",

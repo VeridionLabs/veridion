@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "description": "AI engine with provider abstraction for smart contract analysis",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./openai": "./src/providers/openai.ts",
-    "./anthropic": "./src/providers/anthropic.ts"
+    ".": "./dist/index.js",
+    "./openai": "./dist/providers/openai.js",
+    "./anthropic": "./dist/providers/anthropic.js"
   },
   "scripts": {
     "build": "tsc",
