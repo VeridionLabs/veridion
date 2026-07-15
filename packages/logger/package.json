@@ -23,7 +23,9 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
+    "@veridion/eslint-config": "workspace:*",
     "@veridion/tsconfig": "workspace:*",
+    "eslint": "^8.57.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   }
