@@ -13,7 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "clean": "rm -rf dist",
-    "db:generate": "npx prisma generate",
+    "db:generate": "npx prisma generate && ln -sf ../.prisma node_modules/@prisma/client/.prisma",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
