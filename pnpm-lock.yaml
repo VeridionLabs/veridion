@@ -632,9 +632,15 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
     devDependencies:
+      '@veridion/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/config/eslint
       '@veridion/tsconfig':
         specifier: workspace:*
         version: link:../../packages/config/tsconfig
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.1
       typescript:
         specifier: ^5.4.5
         version: 5.9.3
@@ -676,9 +682,15 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
     devDependencies:
+      '@veridion/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/config/eslint
       '@veridion/tsconfig':
         specifier: workspace:*
         version: link:../../packages/config/tsconfig
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.1
       typescript:
         specifier: ^5.4.5
         version: 5.9.3
@@ -764,9 +776,15 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
     devDependencies:
+      '@veridion/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/config/eslint
       '@veridion/tsconfig':
         specifier: workspace:*
         version: link:../../packages/config/tsconfig
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.1
       typescript:
         specifier: ^5.4.5
         version: 5.9.3

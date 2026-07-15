@@ -18,7 +18,9 @@
     "@veridion/logger": "workspace:*"
   },
   "devDependencies": {
+    "@veridion/eslint-config": "workspace:*",
     "@veridion/tsconfig": "workspace:*",
+    "eslint": "^8.57.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   }
