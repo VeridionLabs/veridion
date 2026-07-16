@@ -53,8 +53,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
     services:
       postgres:
         image: postgres:16-alpine
@@ -85,13 +83,12 @@ jobs:
       - run: pnpm build:packages
       - run: pnpm test
         env:
+          NODE_ENV: production
           DATABASE_URL: postgresql://veridion:veridion@localhost:5432/veridion_test
 
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -106,3 +103,5 @@ jobs:
         env:
           DATABASE_URL: postgresql://veridion:veridion@localhost:5432/veridion_test
       - run: pnpm build
+        env:
+          NODE_ENV: production
