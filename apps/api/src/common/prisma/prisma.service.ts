@@ -1,5 +1,5 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@veridion/database';
 import { prisma } from '@veridion/database';
 import { logger } from '@veridion/logger';
 

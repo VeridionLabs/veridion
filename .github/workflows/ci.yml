@@ -25,6 +25,9 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
+      - run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://veridion:veridion@localhost:5432/veridion_test
       - run: pnpm build:packages
       - run: pnpm lint
 
