@@ -409,6 +409,12 @@ importers:
       eslint-config-prettier:
         specifier: ^9.1.0
         version: 9.1.2(eslint@8.57.1)
+      eslint-import-resolver-node:
+        specifier: ^0.4.0
+        version: 0.4.0
+      eslint-import-resolver-typescript:
+        specifier: ^4.4.5
+        version: 4.4.5(eslint-plugin-import@2.32.0)(eslint@8.57.1)
       eslint-plugin-import:
         specifier: ^2.29.1
         version: 2.32.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint-import-resolver-typescript@4.4.5)(eslint@8.57.1)
@@ -418,13 +424,6 @@ importers:
       eslint-plugin-unused-imports:
         specifier: ^3.1.0
         version: 3.2.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)
-    devDependencies:
-      eslint-import-resolver-node:
-        specifier: ^0.4.0
-        version: 0.4.0
-      eslint-import-resolver-typescript:
-        specifier: ^4.4.5
-        version: 4.4.5(eslint-plugin-import@2.32.0)(eslint@8.57.1)
 
   packages/config/tsconfig: {}
 

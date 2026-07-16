@@ -13,15 +13,13 @@
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-node": "^0.4.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "eslint-plugin-unused-imports": "^3.1.0"
   },
   "peerDependencies": {
     "eslint": "^8.57.0"
-  },
-  "devDependencies": {
-    "eslint-import-resolver-node": "^0.4.0",
-    "eslint-import-resolver-typescript": "^4.4.5"
   }
 }
