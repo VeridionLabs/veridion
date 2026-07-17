@@ -66,13 +66,30 @@ pnpm test:coverage
 
 ## Adding a New Security Plugin
 
-1. Create a new directory: `plugins/my-vuln/`
-2. Add `package.json` with `@veridion/scanner-types` as dependency
-3. Implement the `IRulePlugin` interface
-4. Add unit tests
-5. Register in `apps/api/src/plugins/registry.ts`
+Plugins are the core of Veridion's extensible security scanning. Each plugin detects a specific vulnerability pattern and is completely independent of the scanner engine — no changes to `scanner-core` are required!
 
-No changes to scanner-core required!
+### Quick Start
+
+1. Create a new directory: `plugins/my-vuln/`
+2. Add `package.json`, `tsconfig.json`, `vitest.config.ts`, and `.eslintrc.js`
+3. Implement the `IRulePlugin` interface from `@veridion/scanner-types`
+4. Write comprehensive unit tests (aim for 80%+ coverage)
+5. Register your plugin in the API's plugin registry
+6. Run `pnpm test --filter=@veridion/plugin-my-vuln` to verify
+
+### Documentation
+
+- **[Plugin Development Guide](docs/plugins.md)** — Complete reference for `IRulePlugin`, `PluginMetadata`, `AnalysisContext`, `FindingResult`, best practices, and testing
+- **[Plugin Example Walkthrough](docs/plugin-example.md)** — Step-by-step tutorial building a Self-Destruct Detection Plugin from scratch
+
+### Requirements
+
+- Plugin must implement the `IRulePlugin` interface
+- Plugin must include unit tests covering positive cases, negative cases, and edge cases
+- Plugin metadata must be complete (id, name, version, description, severity, category, chains, languages, tags)
+- Confidence scores must be accurate (0.9+ for definite detections, 0.5-0.7 for heuristics)
+- No dependencies on `scanner-core` or backend packages — only `@veridion/scanner-types`, `@veridion/shared`, and optionally `@veridion/logger`
+- Follow the naming conventions: kebab-case ID, PascalCase class name with `Plugin` suffix
 
 ## Package Dependency Rules
 
