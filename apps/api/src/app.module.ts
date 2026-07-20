@@ -5,6 +5,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 
 import { PrismaModule } from './common/prisma/prisma.module';
 import { AiModule } from './modules/ai/ai.module';
+import { ApiKeysModule } from './modules/api-keys/api-keys.module';
 import { AuditsModule } from './modules/audits/audits.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BlockchainModule } from './modules/blockchain/blockchain.module';
@@ -34,6 +35,7 @@ import { UsersModule } from './modules/users/users.module';
     AuditsModule,
     ReportsModule,
     AiModule,
+    ApiKeysModule,
     BlockchainModule,
     NotificationsModule,
   ],
