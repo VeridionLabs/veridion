@@ -17,7 +17,6 @@ export class ApiKeysService {
         isActive: true,
         lastUsedAt: true,
         createdAt: true,
-        updatedAt: true,
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -41,7 +40,6 @@ export class ApiKeysService {
       key: apiKey.key,
       isActive: apiKey.isActive,
       createdAt: apiKey.createdAt,
-      updatedAt: apiKey.updatedAt,
     };
   }
 

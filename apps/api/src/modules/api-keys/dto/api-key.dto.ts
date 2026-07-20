@@ -26,7 +26,4 @@ export class ApiKeyResponseDto {
 
   @ApiProperty()
   createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
 }
