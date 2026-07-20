@@ -11,7 +11,6 @@ interface ApiKey {
   isActive: boolean;
   lastUsedAt: string | null;
   createdAt: string;
-  updatedAt: string;
 }
 
 interface CreateApiKeyResponse extends ApiKey {
@@ -23,7 +22,7 @@ async function fetchApiKeys(): Promise<ApiKey[]> {
     credentials: 'include',
   });
   if (!res.ok) throw new Error('Failed to fetch API keys');
-  return res.json();
+  return res.json() as Promise<ApiKey[]>;
 }
 
 async function createApiKey(name: string): Promise<CreateApiKeyResponse> {
@@ -34,7 +33,7 @@ async function createApiKey(name: string): Promise<CreateApiKeyResponse> {
     body: JSON.stringify({ name }),
   });
   if (!res.ok) throw new Error('Failed to create API key');
-  return res.json();
+  return res.json() as Promise<CreateApiKeyResponse>;
 }
 
 async function revokeApiKey(keyId: string): Promise<void> {
@@ -68,7 +67,7 @@ export function ApiKeysList() {
   const revokeMutation = useMutation({
     mutationFn: revokeApiKey,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['api-keys'] });
+      void queryClient.invalidateQueries({ queryKey: ['api-keys'] });
       toast.success('API key revoked successfully');
     },
     onError: (err: Error) => {
@@ -96,7 +95,7 @@ export function ApiKeysList() {
   const createMutation = useMutation({
     mutationFn: createApiKey,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['api-keys'] });
+      void queryClient.invalidateQueries({ queryKey: ['api-keys'] });
       setCreatedKey(data.key);
       setShowCreate(false);
       setNewKeyName('');
@@ -115,7 +114,7 @@ export function ApiKeysList() {
   };
 
   const handleCopyKey = (key: string) => {
-    navigator.clipboard.writeText(key);
+    void navigator.clipboard.writeText(key);
     toast.success('API key copied to clipboard');
   };
 
@@ -231,9 +230,11 @@ export function ApiKeysList() {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Key className="text-muted-foreground/30 h-10 w-10" />
             <p className="text-muted-foreground mt-3 text-sm">Failed to load API keys</p>
-            <p className="text-muted-foreground text-xs">{(error as Error)?.message}</p>
+            <p className="text-muted-foreground text-xs">{error?.message}</p>
             <button
-              onClick={() => refetch()}
+              onClick={() => {
+                void refetch();
+              }}
               className="text-primary mt-3 inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
             >
               <RefreshCw className="h-3.5 w-3.5" />

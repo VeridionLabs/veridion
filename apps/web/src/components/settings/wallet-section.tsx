@@ -1,11 +1,11 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { User } from '@veridion/sdk';
 import { CheckCircle2, Copy, ExternalLink, Loader2, Wallet } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import type { User } from '@veridion/sdk';
 import { cn } from '@/lib/utils';
 
 // Stellar public key regex pattern (ed25519 seed)
@@ -17,7 +17,7 @@ async function fetchProfile(): Promise<User> {
     credentials: 'include',
   });
   if (!res.ok) throw new Error('Failed to fetch profile');
-  return res.json();
+  return res.json() as Promise<User>;
 }
 
 async function updateWallet(walletAddress: string): Promise<User> {
@@ -28,7 +28,7 @@ async function updateWallet(walletAddress: string): Promise<User> {
     body: JSON.stringify({ walletAddress: walletAddress || null }),
   });
   if (!res.ok) throw new Error('Failed to update wallet address');
-  return res.json();
+  return res.json() as Promise<User>;
 }
 
 function validateStellarAddress(address: string): string | null {
@@ -55,7 +55,7 @@ export function WalletSection() {
   const mutation = useMutation({
     mutationFn: updateWallet,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      void queryClient.invalidateQueries({ queryKey: ['profile'] });
       toast.success('Wallet address updated successfully');
       setIsEditing(false);
       setValidationError(null);
@@ -92,7 +92,7 @@ export function WalletSection() {
 
   const handleCopy = () => {
     if (walletAddress) {
-      navigator.clipboard.writeText(walletAddress);
+      void navigator.clipboard.writeText(walletAddress);
       toast.success('Wallet address copied to clipboard');
     }
   };

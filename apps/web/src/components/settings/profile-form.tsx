@@ -2,13 +2,13 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { User } from '@veridion/sdk';
 import { Loader2, Save } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import type { User } from '@veridion/sdk';
 import { cn } from '@/lib/utils';
 
 const profileSchema = z.object({
@@ -26,7 +26,7 @@ async function fetchProfile(): Promise<User> {
     credentials: 'include',
   });
   if (!res.ok) throw new Error('Failed to fetch profile');
-  return res.json();
+  return res.json() as Promise<User>;
 }
 
 async function updateProfile(data: ProfileFormData): Promise<User> {
@@ -37,7 +37,7 @@ async function updateProfile(data: ProfileFormData): Promise<User> {
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error('Failed to update profile');
-  return res.json();
+  return res.json() as Promise<User>;
 }
 
 export function ProfileForm() {
@@ -78,7 +78,7 @@ export function ProfileForm() {
   const mutation = useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      void queryClient.invalidateQueries({ queryKey: ['profile'] });
       toast.success('Profile updated successfully');
     },
     onError: (err: Error) => {
@@ -110,7 +110,7 @@ export function ProfileForm() {
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <p className="text-destructive text-sm font-medium">Failed to load profile</p>
           <p className="text-muted-foreground mt-1 text-sm">
-            {(error as Error)?.message || 'Please try again later.'}
+            {error?.message || 'Please try again later.'}
           </p>
         </div>
       </div>
@@ -123,7 +123,12 @@ export function ProfileForm() {
       <p className="text-muted-foreground mt-1 text-sm">
         Update your display name and avatar URL.
       </p>{' '}
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
+      <form
+        onSubmit={(e) => {
+          void handleSubmit(onSubmit)(e);
+        }}
+        className="mt-6 space-y-5"
+      >
         <div>
           <label htmlFor="displayName" className="text-sm font-medium">
             Display Name <span className="text-destructive">*</span>
