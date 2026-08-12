@@ -5,6 +5,8 @@ import { logger } from '@veridion/logger';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +27,11 @@ async function bootstrap() {
       transformOptions: { enableImplicitConversion: true },
     }),
   );
+
+  // Standard response envelope: { success, data } for success,
+  // { success: false, message, errors } for failures.
+  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // API prefix
   app.setGlobalPrefix('api/v1');
