@@ -85,6 +85,21 @@ export class SorobanClient {
     ]);
   }
 
+  async getBadge(_contractAddress: string): Promise<{ badge_level: string; security_score: number; issued_at: number } | null> {
+    try {
+      // For now, return null to indicate no on-chain badge data
+      // In production, this would use the Soroban RPC to query the contract
+      // The actual implementation would involve:
+      // 1. Building a read-only transaction
+      // 2. Simulating it via server.simulateTransaction
+      // 3. Parsing the XDR result
+      return null;
+    } catch (error) {
+      console.error('Failed to get badge from blockchain:', error);
+      return null;
+    }
+  }
+
   private async invoke(
     contractId: string,
     method: string,

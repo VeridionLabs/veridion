@@ -1,5 +1,5 @@
 {
-  "extends": "@veridion/tsconfig/base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "module": "CommonJS",
     "moduleResolution": "node",

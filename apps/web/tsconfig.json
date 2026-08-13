@@ -1,5 +1,5 @@
 {
-  "extends": "@veridion/tsconfig/nextjs.json",
+  "extends": "../../packages/config/tsconfig/nextjs.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

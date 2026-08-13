@@ -11,14 +11,14 @@ import type {
   AiVulnerabilityResponse,
 } from '@veridion/shared';
 
-import type { AiProvider } from '../ai.service';
+import type { AiProviderExtended, CritiqueRequest, CritiqueResponse } from '../ai.service';
 
 interface OpenAiChatResponse {
   choices?: Array<{ message?: { content?: string }; finish_reason?: string }>;
   error?: { message: string; type: string };
 }
 
-export class OpenAiProvider implements AiProvider {
+export class OpenAiProvider implements AiProviderExtended {
   readonly name = 'openai';
   private readonly baseUrl: string;
 
@@ -161,6 +161,36 @@ Output ONLY valid JSON (no markdown fences) with these exact fields:
 
     return this.requestJson<AiReportResponse>(
       'You are a professional smart contract security auditor writing an audit report. Be thorough, objective, and actionable. Output ONLY valid JSON.',
+      prompt,
+    );
+  }
+
+  async critiqueFindings(request: CritiqueRequest): Promise<CritiqueResponse> {
+    logger.info({ provider: 'openai' }, 'Critiquing findings with AST context');
+
+    const prompt = `You are a senior smart contract security expert performing an anti-hallucination critique of AI-generated security findings.
+
+**Original AI Findings:**
+${request.originalFindings}
+
+**AST Context:**
+- File: ${request.astContext.filePath}
+- Imports: ${request.astContext.imports.join(', ')}
+- Function Signatures: ${request.astContext.functionSignatures.join(', ')}
+- Variable Declarations: ${request.astContext.variableDeclarations.join(', ')}
+
+**Language:** ${request.language}
+
+Analyze the original findings against the AST context to identify false positives. The AST provides ground truth about what actually exists in the code.
+
+Output ONLY valid JSON (no markdown fences) with these exact fields:
+- filteredFindings: The original findings with false positives removed
+- falsePositives: An array of strings describing which findings are false positives and why
+- confidenceScores: An object mapping finding descriptions to confidence scores (0-1)
+- reasoning: A detailed explanation of your critique process`;
+
+    return this.requestJson<CritiqueResponse>(
+      'You are a senior security expert performing anti-hallucination critique. Be rigorous and conservative. Output ONLY valid JSON.',
       prompt,
     );
   }

@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc && cp -r src/generated dist/",
+    "build": "tsc && xcopy /E /I /Y src\\generated dist\\generated",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/ --ignore-pattern 'src/generated/**' --max-warnings 0",
     "lint:fix": "eslint src/ --ignore-pattern 'src/generated/**' --fix",
