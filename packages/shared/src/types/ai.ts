@@ -53,20 +53,6 @@ export interface AiFixResponse {
   tradeoffs: string[];
 }
 
-export interface AiDiffRequest {
-  originalCode: string;
-  fixedCode: string;
-  filePath: string;
-  language: string;
-}
-
-export interface AiDiffResponse {
-  gitDiff: string;
-  explanation: string;
-  affectedLines: number[];
-  compilationCheckRequired: boolean;
-}
-
 export interface AiReportRequest {
   auditName: string;
   projectName: string;

@@ -81,31 +81,6 @@ export const blockchainVerificationSchema = z.object({
   walletAddress: z.string().min(1, 'Wallet address is required'),
 });
 
-// ---- Multi-Party Attestation Schema ----
-export const multiPartyAttestationSchema = z.object({
-  auditId: z.string().uuid('Invalid audit ID'),
-  targetContract: z.string().min(1, 'Target contract address is required'),
-  reportHash: z.string().min(1, 'Report hash is required'),
-  securityScore: z.number().min(0).max(100),
-  signatures: z.array(z.string()),
-  threshold: z.number().min(1),
-});
-
-// ---- Security Badge Schema ----
-export const securityBadgeSchema = z.object({
-  contractAddress: z.string().min(1, 'Contract address is required'),
-  badgeLevel: z.enum(['GOLD', 'SILVER', 'BRONZE', 'NONE', 'FLAGGED', 'REVOKED']),
-  securityScore: z.number().min(0).max(100),
-});
-
-// ---- Diff Generation Schema ----
-export const diffGenerationSchema = z.object({
-  originalCode: z.string().min(1, 'Original code is required'),
-  fixedCode: z.string().min(1, 'Fixed code is required'),
-  filePath: z.string().min(1, 'File path is required'),
-  language: z.string().min(1, 'Language is required'),
-});
-
 export type LoginDto = z.infer<typeof loginSchema>;
 export type RegisterDto = z.infer<typeof registerSchema>;
 export type CreateProjectDto = z.infer<typeof createProjectSchema>;
@@ -116,6 +91,3 @@ export type GenerateReportDto = z.infer<typeof generateReportSchema>;
 export type PaginationDto = z.infer<typeof paginationSchema>;
 export type AiChatDto = z.infer<typeof aiChatSchema>;
 export type BlockchainVerificationDto = z.infer<typeof blockchainVerificationSchema>;
-export type MultiPartyAttestationDto = z.infer<typeof multiPartyAttestationSchema>;
-export type SecurityBadgeDto = z.infer<typeof securityBadgeSchema>;
-export type DiffGenerationDto = z.infer<typeof diffGenerationSchema>;

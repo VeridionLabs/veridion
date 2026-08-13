@@ -22,8 +22,7 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "ignoreDeprecations": "6.0"
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "dist", ".turbo", "coverage"]
 }

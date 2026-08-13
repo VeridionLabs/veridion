@@ -152,14 +152,6 @@ model Audit {
   reportUrl      String?
   transactionHash String?
   chainStatus    String?
-  // Multi-party attestation fields
-  targetContract String?
-  attestationSignatures Json?
-  attestationThreshold Int?
-  // Security badge fields
-  badgeLevel     String?
-  badgeIssuedAt  DateTime?
-  badgeRevokedAt DateTime?
   startedAt      DateTime?
   completedAt    DateTime?
   error          String?
@@ -172,7 +164,6 @@ model Audit {
 
   @@index([projectId])
   @@index([status])
-  @@index([chainStatus])
 }
 
 model AuditFinding {
