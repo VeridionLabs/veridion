@@ -1,11 +1,15 @@
 'use client';
 
+import { DiffEditor, Editor } from '@monaco-editor/react';
+import { Check, Download, X } from 'lucide-react';
+import type * as MonacoNamespace from 'monaco-editor/esm/vs/editor/editor.api';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { DiffEditor, Editor, Monaco } from '@monaco-editor/react';
+import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, X, Download } from 'lucide-react';
+
+type Monaco = typeof MonacoNamespace;
 
 interface MonacoDiffViewerProps {
   originalCode: string;
@@ -29,7 +33,7 @@ export function MonacoDiffViewer({
   const [isModified, setIsModified] = useState(false);
   const [showDiff, setShowDiff] = useState(true);
 
-  const handleEditorDidMount = (editor: any, monaco: any) => {
+  const configureTheme = (monaco: Monaco) => {
     // Configure Monaco editor
     monaco.editor.defineTheme('veridion-dark', {
       base: 'vs-dark',
@@ -51,6 +55,20 @@ export function MonacoDiffViewer({
     monaco.editor.setTheme('veridion-dark');
   };
 
+  const handleEditorDidMount = (
+    editor: MonacoNamespace.editor.IStandaloneCodeEditor,
+    monaco: Monaco,
+  ) => {
+    configureTheme(monaco);
+  };
+
+  const handleDiffEditorDidMount = (
+    editor: MonacoNamespace.editor.IStandaloneDiffEditor,
+    monaco: Monaco,
+  ) => {
+    configureTheme(monaco);
+  };
+
   const handleEditorChange = (value: string | undefined) => {
     setIsModified(value !== originalCode);
   };
@@ -69,30 +87,20 @@ export function MonacoDiffViewer({
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold">
-            Code Diff Viewer - {fileName}
-          </CardTitle>
+          <CardTitle className="text-lg font-semibold">Code Diff Viewer - {fileName}</CardTitle>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowDiff(!showDiff)}
-            >
+            <Button variant="outline" size="sm" onClick={() => setShowDiff(!showDiff)}>
               {showDiff ? 'Show Side-by-Side' : 'Show Diff'}
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleDownload}
-            >
-              <Download className="h-4 w-4 mr-2" />
+            <Button variant="outline" size="sm" onClick={handleDownload}>
+              <Download className="mr-2 h-4 w-4" />
               Download
             </Button>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="border rounded-lg overflow-hidden">
+        <div className="overflow-hidden rounded-lg border">
           {showDiff ? (
             <DiffEditor
               height="500px"
@@ -100,6 +108,7 @@ export function MonacoDiffViewer({
               original={originalCode}
               modified={modifiedCode}
               theme="veridion-dark"
+              onMount={handleDiffEditorDidMount}
               options={{
                 readOnly,
                 renderSideBySide: true,
@@ -115,14 +124,13 @@ export function MonacoDiffViewer({
           ) : (
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="bg-muted px-4 py-2 text-sm font-medium border-b">
-                  Original
-                </div>
+                <div className="bg-muted border-b px-4 py-2 text-sm font-medium">Original</div>
                 <Editor
                   height="500px"
                   language={language}
                   value={originalCode}
                   theme="veridion-dark"
+                  onMount={handleEditorDidMount}
                   options={{
                     readOnly: true,
                     minimap: { enabled: true },
@@ -134,15 +142,14 @@ export function MonacoDiffViewer({
                 />
               </div>
               <div>
-                <div className="bg-muted px-4 py-2 text-sm font-medium border-b">
-                  Modified
-                </div>
+                <div className="bg-muted border-b px-4 py-2 text-sm font-medium">Modified</div>
                 <Editor
                   height="500px"
                   language={language}
                   value={modifiedCode}
                   theme="veridion-dark"
                   onChange={handleEditorChange}
+                  onMount={handleEditorDidMount}
                   options={{
                     readOnly,
                     minimap: { enabled: true },
@@ -158,20 +165,12 @@ export function MonacoDiffViewer({
         </div>
 
         {!readOnly && (
-          <div className="flex gap-3 mt-4 justify-end">
-            <Button
-              variant="outline"
-              onClick={onReject}
-              className="flex items-center gap-2"
-            >
+          <div className="mt-4 flex justify-end gap-3">
+            <Button variant="outline" onClick={onReject} className="flex items-center gap-2">
               <X className="h-4 w-4" />
               Reject Changes
             </Button>
-            <Button
-              onClick={onAccept}
-              className="flex items-center gap-2"
-              disabled={!isModified}
-            >
+            <Button onClick={onAccept} className="flex items-center gap-2" disabled={!isModified}>
               <Check className="h-4 w-4" />
               Accept Changes
             </Button>

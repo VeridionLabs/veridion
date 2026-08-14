@@ -37,7 +37,7 @@
     "build": "turbo build",
     "build:web": "turbo build --filter=@veridion/web",
     "build:api": "turbo build --filter=@veridion/api",
-    "build:packages": "turbo build --filter='./packages/*'",
+    "build:packages": "turbo build --filter=./packages/*",
     "typecheck": "turbo typecheck",
     "lint": "turbo lint",
     "lint:fix": "turbo lint:fix",

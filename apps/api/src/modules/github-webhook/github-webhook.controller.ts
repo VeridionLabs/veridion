@@ -1,6 +1,6 @@
 import { Body, Controller, Headers, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiHeader,ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { logger } from '@veridion/logger';
 
 import { GithubWebhookService } from './github-webhook.service';
@@ -94,7 +94,10 @@ export class GithubWebhookController {
     }
 
     // Handle different pull request events
-    if (eventType === 'pull_request' && ['opened', 'synchronize', 'reopened'].includes(payload.action)) {
+    if (
+      eventType === 'pull_request' &&
+      ['opened', 'synchronize', 'reopened'].includes(payload.action)
+    ) {
       await this.githubWebhookService.handlePullRequestEvent(payload);
     }
 

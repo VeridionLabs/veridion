@@ -1,9 +1,9 @@
 'use client';
 
+import { Play, Terminal } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Terminal, Play, Pause, X } from 'lucide-react';
 
 interface LogEntry {
   timestamp: string;
@@ -35,17 +35,17 @@ export function WebSocketTerminal({ auditId, onComplete }: WebSocketTerminalProp
   useEffect(() => {
     // Connect to WebSocket
     const ws = new WebSocket(`ws://localhost:3001/ws/audit/${auditId}`);
-    
+
     ws.onopen = () => {
       setIsConnected(true);
       addLog('Connected to audit pipeline', 'success');
     };
 
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data) as LogEntry;
+      const data = JSON.parse(event.data as string) as LogEntry;
       setLogs((prev) => [...prev, data]);
       setCurrentStage(data.stage);
-      
+
       if (data.stage === 'On-Chain Attestation' && data.status === 'success') {
         onComplete?.();
       }
@@ -127,8 +127,12 @@ export function WebSocketTerminal({ auditId, onComplete }: WebSocketTerminalProp
             Audit Pipeline Terminal
           </CardTitle>
           <div className="flex items-center gap-2">
-            <div className={`flex items-center gap-2 text-sm ${isConnected ? 'text-green-500' : 'text-slate-500'}`}>
-              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-slate-500'}`} />
+            <div
+              className={`flex items-center gap-2 text-sm ${isConnected ? 'text-green-500' : 'text-slate-500'}`}
+            >
+              <div
+                className={`h-2 w-2 rounded-full ${isConnected ? 'animate-pulse bg-green-500' : 'bg-slate-500'}`}
+              />
               {isConnected ? 'Live' : 'Disconnected'}
             </div>
           </div>
@@ -137,25 +141,21 @@ export function WebSocketTerminal({ auditId, onComplete }: WebSocketTerminalProp
       <CardContent>
         {/* Progress Bar */}
         <div className="mb-4">
-          <div className="flex justify-between text-sm text-muted-foreground mb-2">
+          <div className="text-muted-foreground mb-2 flex justify-between text-sm">
             <span>Pipeline Progress</span>
             <span>{Math.round(getStageProgress())}%</span>
           </div>
-          <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div className="h-2 overflow-hidden rounded-full bg-slate-200">
             <div
               className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500"
               style={{ width: `${getStageProgress()}%` }}
             />
           </div>
-          <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+          <div className="text-muted-foreground mt-2 flex justify-between text-xs">
             {stages.map((stage, index) => (
               <span
                 key={stage}
-                className={
-                  stages.indexOf(currentStage) >= index
-                    ? 'text-primary font-medium'
-                    : ''
-                }
+                className={stages.indexOf(currentStage) >= index ? 'text-primary font-medium' : ''}
               >
                 {stage}
               </span>
@@ -166,22 +166,20 @@ export function WebSocketTerminal({ auditId, onComplete }: WebSocketTerminalProp
         {/* Terminal */}
         <div
           ref={terminalRef}
-          className="bg-slate-950 text-slate-100 font-mono text-sm p-4 rounded-lg h-96 overflow-y-auto space-y-1"
+          className="h-96 space-y-1 overflow-y-auto rounded-lg bg-slate-950 p-4 font-mono text-sm text-slate-100"
         >
           {logs.length === 0 && (
-            <div className="text-slate-500 flex items-center gap-2">
+            <div className="flex items-center gap-2 text-slate-500">
               <Terminal className="h-4 w-4" />
               Waiting for audit to start...
             </div>
           )}
           {logs.map((log, index) => (
             <div key={index} className="flex gap-2">
-              <span className="text-slate-500 shrink-0">
+              <span className="shrink-0 text-slate-500">
                 [{new Date(log.timestamp).toLocaleTimeString()}]
               </span>
-              <span className="text-blue-400 shrink-0 w-32">
-                [{log.stage}]
-              </span>
+              <span className="w-32 shrink-0 text-blue-400">[{log.stage}]</span>
               <span className={getStatusColor(log.status)}>
                 {getStatusIcon(log.status)} {log.message}
               </span>
@@ -193,7 +191,7 @@ export function WebSocketTerminal({ auditId, onComplete }: WebSocketTerminalProp
         {currentStage && (
           <div className="mt-4 flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm">
-              <Play className="h-4 w-4 text-primary" />
+              <Play className="text-primary h-4 w-4" />
               <span className="font-medium">Current Stage:</span>
               <span className="text-primary">{currentStage}</span>
             </div>

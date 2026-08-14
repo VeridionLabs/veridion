@@ -13,9 +13,7 @@ interface Project {
 
 @Injectable()
 export class GithubWebhookService {
-  constructor(
-    private readonly config: ConfigService,
-  ) {}
+  constructor(private readonly config: ConfigService) {}
 
   verifySignature(payload: string, signature: string, secret: string): boolean {
     const hmac = createHmac('sha256', secret);

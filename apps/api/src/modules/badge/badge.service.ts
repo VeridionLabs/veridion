@@ -90,7 +90,9 @@ export class BadgeService {
     return 'NONE';
   }
 
-  private mapBadgeLevelToStatus(badgeLevel: string): 'VERIFIED' | 'PENDING' | 'FLAGGED' | 'REVOKED' {
+  private mapBadgeLevelToStatus(
+    badgeLevel: string,
+  ): 'VERIFIED' | 'PENDING' | 'FLAGGED' | 'REVOKED' {
     if (badgeLevel === 'FLAGGED') return 'FLAGGED';
     if (badgeLevel === 'REVOKED') return 'REVOKED';
     if (badgeLevel === 'NONE') return 'PENDING';

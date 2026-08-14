@@ -11,12 +11,9 @@ export class BadgeController {
 
   @Get(':contractId.svg')
   @ApiOperation({ summary: 'Get dynamic SVG security badge for a contract' })
-  async getBadge(
-    @Param('contractId') contractId: string,
-    @Response() response: ExpressResponse,
-  ) {
+  async getBadge(@Param('contractId') contractId: string, @Response() response: ExpressResponse) {
     const svg = await this.badgeService.generateBadge(contractId);
-    
+
     response.set('Content-Type', 'image/svg+xml');
     response.set('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
     response.send(svg);

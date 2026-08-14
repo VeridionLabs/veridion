@@ -85,7 +85,9 @@ export class SorobanClient {
     ]);
   }
 
-  async getBadge(_contractAddress: string): Promise<{ badge_level: string; security_score: number; issued_at: number } | null> {
+  async getBadge(
+    _contractAddress: string,
+  ): Promise<{ badge_level: string; security_score: number; issued_at: number } | null> {
     try {
       // For now, return null to indicate no on-chain badge data
       // In production, this would use the Soroban RPC to query the contract

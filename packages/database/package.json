@@ -6,10 +6,10 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc && xcopy /E /I /Y src\\generated dist\\generated",
+    "build": "tsc && shx cp -r src/generated dist/generated",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src/ --ignore-pattern 'src/generated/**' --max-warnings 0",
-    "lint:fix": "eslint src/ --ignore-pattern 'src/generated/**' --fix",
+    "lint": "eslint src/ --max-warnings 0",
+    "lint:fix": "eslint src/ --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "clean": "rm -rf dist",
@@ -31,6 +31,7 @@
     "@veridion/tsconfig": "workspace:*",
     "eslint": "^8.57.0",
     "prisma": "^5.14.0",
+    "shx": "^0.3.4",
     "tsx": "^4.11.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"

@@ -2,7 +2,6 @@
   "extends": "../../packages/config/tsconfig/nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": "./src",
     "rootDir": "./src",
     "paths": {
       "@/*": ["./src/*"]

@@ -1,7 +1,8 @@
+import { AlertCircle, CheckCircle, Clock, Shield, XCircle } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { Badge } from '@/components/ui/badge';
-import { Shield, CheckCircle, AlertCircle, Clock, XCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface VerificationData {
   txHash: string;
@@ -18,7 +19,7 @@ interface VerificationData {
   }>;
 }
 
-async function getVerificationData(txHash: string): Promise<VerificationData | null> {
+function getVerificationData(txHash: string): VerificationData | null {
   // In production, this would fetch from the blockchain or API
   // For now, return mock data
   if (txHash.length < 10) return null;
@@ -40,12 +41,8 @@ async function getVerificationData(txHash: string): Promise<VerificationData | n
   };
 }
 
-export default async function VerificationExplorerPage({
-  params,
-}: {
-  params: { txHash: string };
-}) {
-  const verification = await getVerificationData(params.txHash);
+export default function VerificationExplorerPage({ params }: { params: { txHash: string } }) {
+  const verification = getVerificationData(params.txHash);
 
   if (!verification) {
     notFound();
@@ -89,17 +86,15 @@ export default async function VerificationExplorerPage({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-12 dark:from-slate-900 dark:to-slate-800">
+      <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
-        <div className="text-center space-y-4">
+        <div className="space-y-4 text-center">
           <div className="flex justify-center">
-            <Shield className="h-16 w-16 text-primary" />
+            <Shield className="text-primary h-16 w-16" />
           </div>
           <h1 className="text-4xl font-bold">Verification Explorer</h1>
-          <p className="text-muted-foreground">
-            View on-chain audit verification details
-          </p>
+          <p className="text-muted-foreground">View on-chain audit verification details</p>
         </div>
 
         {/* Status Card */}
@@ -118,30 +113,20 @@ export default async function VerificationExplorerPage({
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Transaction Hash
-                </p>
+                <p className="text-muted-foreground text-sm font-medium">Transaction Hash</p>
                 <p className="font-mono text-sm">{verification.txHash}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Audit ID
-                </p>
+                <p className="text-muted-foreground text-sm font-medium">Audit ID</p>
                 <p className="font-mono text-sm">{verification.auditId}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Contract Address
-                </p>
+                <p className="text-muted-foreground text-sm font-medium">Contract Address</p>
                 <p className="font-mono text-sm">{verification.contractAddress}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Verified At
-                </p>
-                <p className="text-sm">
-                  {new Date(verification.verifiedAt).toLocaleString()}
-                </p>
+                <p className="text-muted-foreground text-sm font-medium">Verified At</p>
+                <p className="text-sm">{new Date(verification.verifiedAt).toLocaleString()}</p>
               </div>
             </div>
           </CardContent>
@@ -156,13 +141,13 @@ export default async function VerificationExplorerPage({
             <div className="flex items-center gap-4">
               <div className="text-5xl font-bold">{verification.securityScore}</div>
               <div className="flex-1">
-                <div className="h-4 bg-slate-200 rounded-full overflow-hidden">
+                <div className="h-4 overflow-hidden rounded-full bg-slate-200">
                   <div
                     className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-all duration-500"
                     style={{ width: `${verification.securityScore}%` }}
                   />
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-muted-foreground mt-2 text-sm">
                   {verification.securityScore >= 90
                     ? 'Excellent security posture'
                     : verification.securityScore >= 75
@@ -184,15 +169,13 @@ export default async function VerificationExplorerPage({
           <CardContent>
             <div className="flex items-center gap-4">
               <div
-                className={`w-20 h-20 rounded-full bg-gradient-to-br ${badgeColors[verification.badgeLevel as keyof typeof badgeColors]} flex items-center justify-center text-white font-bold text-xl shadow-lg`}
+                className={`h-20 w-20 rounded-full bg-gradient-to-br ${badgeColors[verification.badgeLevel as keyof typeof badgeColors]} flex items-center justify-center text-xl font-bold text-white shadow-lg`}
               >
                 {verification.badgeLevel[0]}
               </div>
               <div>
                 <p className="text-2xl font-bold">{verification.badgeLevel} Badge</p>
-                <p className="text-sm text-muted-foreground">
-                  Issued by Veridion Audit Network
-                </p>
+                <p className="text-muted-foreground text-sm">Issued by Veridion Audit Network</p>
               </div>
             </div>
           </CardContent>
@@ -208,15 +191,15 @@ export default async function VerificationExplorerPage({
               {verification.auditSignatures.map((sig, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg"
+                  className="flex items-center justify-between rounded-lg bg-slate-50 p-3 dark:bg-slate-800"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                      <CheckCircle className="h-4 w-4 text-primary" />
+                    <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
+                      <CheckCircle className="text-primary h-4 w-4" />
                     </div>
                     <div>
                       <p className="font-mono text-sm">{sig.auditor}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         {new Date(sig.timestamp).toLocaleString()}
                       </p>
                     </div>
@@ -236,23 +219,23 @@ export default async function VerificationExplorerPage({
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Network</span>
+                <span className="text-muted-foreground text-sm">Network</span>
                 <span className="text-sm font-medium">Stellar Mainnet</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Protocol</span>
+                <span className="text-muted-foreground text-sm">Protocol</span>
                 <span className="text-sm font-medium">Soroban</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Contract</span>
-                <span className="text-sm font-mono">Veridion Verifier</span>
+                <span className="text-muted-foreground text-sm">Contract</span>
+                <span className="font-mono text-sm">Veridion Verifier</span>
               </div>
               <div className="pt-4">
                 <a
                   href={`https://stellar.expert/tx/${verification.txHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline"
+                  className="text-primary text-sm hover:underline"
                 >
                   View on Stellar Expert →
                 </a>
@@ -262,7 +245,7 @@ export default async function VerificationExplorerPage({
         </Card>
 
         {/* Footer */}
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-muted-foreground text-center text-sm">
           <p>Powered by Veridion • Smart Contract Security Platform</p>
           <p className="mt-1">
             <a href="/" className="text-primary hover:underline">
