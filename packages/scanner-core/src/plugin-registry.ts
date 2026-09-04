@@ -1,8 +1,13 @@
 import { logger } from '@veridion/logger';
+import { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 
 export class PluginRegistry {
   private plugins = new Map<string, IRulePlugin>();
+
+  constructor() {
+    this.register(new UncheckedReturnPlugin());
+  }
 
   register(plugin: IRulePlugin): void {
     if (this.plugins.has(plugin.metadata.id)) {
