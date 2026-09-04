@@ -46,6 +46,16 @@ describe('PluginRegistry', () => {
     expect(registry.size).toBe(1);
   });
 
+  it('should register initial plugins from the constructor', () => {
+    const registryWithInitialPlugins = new PluginRegistry([
+      createMockPlugin('reentrancy'),
+      createMockPlugin('unchecked-return'),
+    ]);
+
+    expect(registryWithInitialPlugins.size).toBe(2);
+    expect(registryWithInitialPlugins.get('unchecked-return')?.metadata.category).toBe('CUSTOM');
+  });
+
   it('should retrieve a registered plugin', () => {
     const plugin = createMockPlugin('test-plugin');
     registry.register(plugin);
