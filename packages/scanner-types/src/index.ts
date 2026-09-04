@@ -16,6 +16,23 @@ export type PluginCategory =
   | 'UPGRADE'
   | 'CUSTOM';
 
+export interface ConfigPropertySchema {
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+  description?: string;
+  default?: unknown;
+  required?: boolean;
+}
+
+export type PluginConfigSchema = Record<string, ConfigPropertySchema>;
+
+export interface PluginConfig {
+  enabled?: boolean;
+  severityOverride?: FindingSeverity;
+  disabledPatterns?: string[];
+  thresholds?: Record<string, number>;
+  [key: string]: unknown;
+}
+
 export interface PluginMetadata {
   id: string;
   name: string;
@@ -28,6 +45,7 @@ export interface PluginMetadata {
   tags: string[];
   author?: string;
   references?: string[];
+  configSchema?: PluginConfigSchema;
 }
 
 export interface AnalysisContext {

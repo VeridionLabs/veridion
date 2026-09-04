@@ -1,6 +1,6 @@
 import { logger } from '@veridion/logger';
 import type { AnalysisContext, FindingResult, IRulePlugin } from '@veridion/scanner-types';
-import { AuditStatus } from '@veridion/shared';
+import { AuditStatus, type FindingSeverity } from '@veridion/shared';
 
 import type { PluginRegistry } from './plugin-registry';
 import { ResultAggregator } from './result-aggregator';
@@ -90,8 +90,35 @@ export class Scanner {
 
   private async runPlugin(plugin: IRulePlugin, context: AnalysisContext): Promise<FindingResult[]> {
     try {
+      const config = this.registry.getPluginConfig(plugin.metadata.id);
+      if (config?.enabled === false) {
+        logger.debug({ pluginId: plugin.metadata.id }, 'Plugin disabled by configuration, skipping');
+        return [];
+      }
+
       logger.debug({ pluginId: plugin.metadata.id }, 'Running plugin');
-      const findings = await plugin.analyze(context);
+      let findings = await plugin.analyze(context);
+
+      if (config) {
+        if (config.disabledPatterns && config.disabledPatterns.length > 0) {
+          findings = findings.filter((f) => {
+            const matchesPattern = config.disabledPatterns?.some(
+              (pattern) =>
+                f.title.toLowerCase().includes(pattern.toLowerCase()) ||
+                f.codeSnippet.toLowerCase().includes(pattern.toLowerCase()),
+            );
+            return !matchesPattern;
+          });
+        }
+
+        if (config.severityOverride) {
+          findings = findings.map((f) => ({
+            ...f,
+            severity: config.severityOverride as FindingSeverity,
+          }));
+        }
+      }
+
       logger.debug(
         { pluginId: plugin.metadata.id, findingCount: findings.length },
         'Plugin completed',

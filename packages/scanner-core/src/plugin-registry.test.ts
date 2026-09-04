@@ -84,4 +84,73 @@ describe('PluginRegistry', () => {
     const allMeta = registry.getAllMetadata();
     expect(allMeta).toHaveLength(2);
   });
+
+  describe('Plugin Configuration', () => {
+    it('should register a plugin with optional configuration and retrieve it', () => {
+      const plugin = createMockPlugin('configurable');
+      registry.register(plugin, {
+        enabled: true,
+        severityOverride: FindingSeverity.CRITICAL,
+        thresholds: { maxGas: 50000 },
+      });
+
+      const config = registry.getPluginConfig('configurable');
+      expect(config).toBeDefined();
+      expect(config?.enabled).toBe(true);
+      expect(config?.severityOverride).toBe(FindingSeverity.CRITICAL);
+      expect(config?.thresholds).toEqual({ maxGas: 50000 });
+    });
+
+    it('should return undefined when no configuration was set', () => {
+      const plugin = createMockPlugin('unconfigured');
+      registry.register(plugin);
+      expect(registry.getPluginConfig('unconfigured')).toBeUndefined();
+    });
+
+    it('should allow updating plugin config with setPluginConfig', () => {
+      const plugin = createMockPlugin('updateable');
+      registry.register(plugin);
+      expect(registry.getPluginConfig('updateable')).toBeUndefined();
+
+      registry.setPluginConfig('updateable', { enabled: false });
+      expect(registry.getPluginConfig('updateable')?.enabled).toBe(false);
+    });
+
+    it('should clean up config when plugin is unregistered', () => {
+      const plugin = createMockPlugin('to-remove');
+      registry.register(plugin, { enabled: true });
+      expect(registry.getPluginConfig('to-remove')).toBeDefined();
+
+      registry.unregister('to-remove');
+      expect(registry.getPluginConfig('to-remove')).toBeUndefined();
+    });
+
+    it('should validate config against schema when schema is defined', () => {
+      const pluginWithSchema: IRulePlugin = {
+        ...createMockPlugin('schema-plugin'),
+        metadata: {
+          ...createMockPlugin('schema-plugin').metadata,
+          configSchema: {
+            maxDepth: { type: 'number', required: true },
+            allowFallback: { type: 'boolean' },
+          },
+        },
+      };
+
+      // Valid config
+      expect(() => {
+        registry.register(pluginWithSchema, { maxDepth: 5, allowFallback: true });
+      }).not.toThrow();
+
+      // Missing required property
+      expect(() => {
+        registry.register(pluginWithSchema, { allowFallback: true });
+      }).toThrow(/missing required property 'maxDepth'/);
+
+      // Wrong type
+      expect(() => {
+        registry.register(pluginWithSchema, { maxDepth: 'not-a-number' as unknown as number });
+      }).toThrow(/expected type 'number', got 'string'/);
+    });
+  });
 });
