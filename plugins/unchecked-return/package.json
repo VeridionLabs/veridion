@@ -1,0 +1,23 @@
+{
+  "name": "@veridion/plugin-unchecked-return",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Veridion scanner plugin that detects unchecked return values from low-level .call(), .send(), and .delegatecall() invocations.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@solidity-parser/parser": "^0.18.0",
+    "@veridion/scanner-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.6.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}
