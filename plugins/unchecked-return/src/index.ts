@@ -34,7 +34,7 @@ export class UncheckedReturnPlugin implements IRulePlugin {
 
     lines.forEach((line, index) => {
       const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith('//') || trimmed.startsWith('*')) return;
+      if (!trimmed || trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) return;
 
       for (const match of line.matchAll(callPattern)) {
         const method = match[1];
