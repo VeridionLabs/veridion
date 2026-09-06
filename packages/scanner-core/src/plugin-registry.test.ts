@@ -84,4 +84,26 @@ describe('PluginRegistry', () => {
     const allMeta = registry.getAllMetadata();
     expect(allMeta).toHaveLength(2);
   });
+
+  it('should register default plugins including unchecked-return', () => {
+    registry.registerDefaultPlugins();
+    expect(registry.size).toBeGreaterThan(0);
+    const plugin = registry.get('unchecked-return');
+    expect(plugin).toBeDefined();
+    expect(plugin?.metadata.id).toBe('unchecked-return');
+    expect(plugin?.metadata.category).toBe('UNCHECKED_RETURN');
+  });
+});
+
+describe('createDefaultRegistry', () => {
+  it('should instantiate a registry pre-populated with unchecked-return plugin', async () => {
+    const { createDefaultRegistry } = await import('./plugin-registry');
+    const defaultRegistry = createDefaultRegistry();
+    expect(defaultRegistry.size).toBeGreaterThan(0);
+    const plugin = defaultRegistry.get('unchecked-return');
+    expect(plugin).toBeDefined();
+    expect(plugin?.metadata.id).toBe('unchecked-return');
+    expect(plugin?.metadata.category).toBe('UNCHECKED_RETURN');
+    expect(plugin?.metadata.severity).toBe('HIGH');
+  });
 });
