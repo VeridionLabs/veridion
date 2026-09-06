@@ -1,8 +1,9 @@
 import type { IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
-import { FindingSeverity } from '@veridion/shared';
+import { AuditStatus, FindingSeverity } from '@veridion/shared';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { PluginRegistry } from './plugin-registry';
+import { createDefaultRegistry, PluginRegistry } from './plugin-registry';
+import { Scanner } from './scanner';
 
 function createMockPlugin(
   id: string,
@@ -83,5 +84,60 @@ describe('PluginRegistry', () => {
     registry.registerAll([createMockPlugin('a'), createMockPlugin('b')]);
     const allMeta = registry.getAllMetadata();
     expect(allMeta).toHaveLength(2);
+  });
+});
+
+describe('createDefaultRegistry', () => {
+  it('should register the unchecked-return plugin by default', () => {
+    const registry = createDefaultRegistry();
+    expect(registry.size).toBe(1);
+    const plugin = registry.get('unchecked-return');
+    expect(plugin).toBeDefined();
+    expect(plugin?.metadata.id).toBe('unchecked-return');
+    expect(plugin?.metadata.category).toBe('UNCHECKED_RETURN');
+    expect(plugin?.metadata.severity).toBe(FindingSeverity.MEDIUM);
+  });
+
+  it('should list the plugin in registry metadata', () => {
+    const registry = createDefaultRegistry();
+    expect(registry.getAllMetadata().map((m) => m.id)).toContain('unchecked-return');
+  });
+
+  it('should match the plugin only for supported contexts', () => {
+    const registry = createDefaultRegistry();
+    const matching = registry.getMatchingPlugins({
+      contractName: 'V',
+      sourceCode: '',
+      chain: 'ethereum',
+      language: 'vyper',
+      compilerVersion: null,
+      metadata: {},
+    });
+    expect(matching).toHaveLength(0);
+  });
+
+  it('should produce findings end-to-end through the Scanner', async () => {
+    const registry = createDefaultRegistry();
+    const scanner = new Scanner(registry);
+    const result = await scanner.scan({
+      contractName: 'Vulnerable',
+      sourceCode: [
+        'contract Vulnerable {',
+        '  function rescue(address payable target) public {',
+        '    target.call{value: address(this).balance}("");',
+        '  }',
+        '}',
+      ].join('\n'),
+      chain: 'ethereum',
+      language: 'solidity',
+      compilerVersion: '0.8.19',
+      metadata: {},
+    });
+
+    expect(result.status).toBe(AuditStatus.COMPLETED);
+    expect(result.pluginCount).toBe(1);
+    expect(result.findings).toHaveLength(1);
+    expect(result.findings[0]?.pluginId).toBe('unchecked-return');
+    expect(result.findings[0]?.severity).toBe(FindingSeverity.MEDIUM);
   });
 });
