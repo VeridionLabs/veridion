@@ -1,4 +1,5 @@
 import { logger } from '@veridion/logger';
+import { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 
 export class PluginRegistry {
@@ -69,4 +70,15 @@ export class PluginRegistry {
   get size(): number {
     return this.plugins.size;
   }
+}
+
+/**
+ * Builds the default plugin registry used by the scanner. New plugins are
+ * registered here as they land; consumers can still compose a custom registry
+ * with {@link PluginRegistry} directly.
+ */
+export function createDefaultRegistry(): PluginRegistry {
+  const registry = new PluginRegistry();
+  registry.register(new UncheckedReturnPlugin());
+  return registry;
 }
