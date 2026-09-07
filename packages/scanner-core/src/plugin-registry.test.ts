@@ -2,7 +2,8 @@ import type { IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 import { FindingSeverity } from '@veridion/shared';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { PluginRegistry } from './plugin-registry';
+import { createDefaultRegistry, PluginRegistry } from './plugin-registry';
+import { Scanner } from './scanner';
 
 function createMockPlugin(
   id: string,
@@ -67,8 +68,7 @@ describe('PluginRegistry', () => {
     });
 
     expect(matching).toHaveLength(1);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(matching[0]!.metadata.id).toBe('eth');
+    expect(matching[0]?.metadata.id).toBe('eth');
   });
 
   it('should unregister a plugin', () => {
@@ -83,5 +83,45 @@ describe('PluginRegistry', () => {
     registry.registerAll([createMockPlugin('a'), createMockPlugin('b')]);
     const allMeta = registry.getAllMetadata();
     expect(allMeta).toHaveLength(2);
+  });
+});
+
+describe('createDefaultRegistry', () => {
+  it('should register unchecked-return plugin by default', () => {
+    const registry = createDefaultRegistry();
+    expect(registry.size).toBe(1);
+    const plugin = registry.get('unchecked-return');
+    expect(plugin).toBeDefined();
+    expect(plugin?.metadata.id).toBe('unchecked-return');
+    expect(plugin?.metadata.category).toBe('UNCHECKED_RETURN');
+    expect(plugin?.metadata.severity).toBe(FindingSeverity.HIGH);
+  });
+
+  it('should list unchecked-return in all metadata', () => {
+    const registry = createDefaultRegistry();
+    const ids = registry.getAllMetadata().map((m) => m.id);
+    expect(ids).toContain('unchecked-return');
+  });
+
+  it('should execute end-to-end scan through Scanner', async () => {
+    const registry = createDefaultRegistry();
+    const scanner = new Scanner(registry);
+    const result = await scanner.scan({
+      contractName: 'TestVault',
+      sourceCode: `
+contract TestVault {
+    function withdraw(address payable recipient) public {
+        recipient.call("");
+    }
+}`,
+      chain: 'ethereum',
+      language: 'solidity',
+      compilerVersion: '0.8.20',
+      metadata: {},
+    });
+
+    expect(result.findings).toHaveLength(1);
+    expect(result.findings[0]?.pluginId).toBe('unchecked-return');
+    expect(result.findings[0]?.lineStart).toBe(4);
   });
 });
