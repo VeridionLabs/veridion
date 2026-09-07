@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@veridion/logger": "workspace:*",
+    "@veridion/plugin-unchecked-return": "workspace:*",
     "@veridion/scanner-types": "workspace:*",
     "@veridion/shared": "workspace:*"
   },
