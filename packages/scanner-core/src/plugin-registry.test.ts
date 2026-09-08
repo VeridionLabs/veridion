@@ -2,7 +2,8 @@ import type { IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 import { FindingSeverity } from '@veridion/shared';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { PluginRegistry } from './plugin-registry';
+import { createDefaultRegistry, PluginRegistry } from './plugin-registry';
+import { Scanner } from './scanner';
 
 function createMockPlugin(
   id: string,
@@ -83,5 +84,29 @@ describe('PluginRegistry', () => {
     registry.registerAll([createMockPlugin('a'), createMockPlugin('b')]);
     const allMeta = registry.getAllMetadata();
     expect(allMeta).toHaveLength(2);
+  });
+
+  it('registers the bundled unchecked-return rule without changing custom registries', () => {
+    expect(new PluginRegistry().size).toBe(0);
+    expect(createDefaultRegistry().get('unchecked-return')?.metadata.category).toBe(
+      'UNCHECKED_RETURN',
+    );
+  });
+
+  it('runs the bundled rule through the real scanner', async () => {
+    const scanner = new Scanner(createDefaultRegistry());
+    const result = await scanner.scan({
+      contractName: 'Example',
+      sourceCode:
+        'contract Example { function bad() external { target.send(1); } function good() external { require(target.send(1)); } }',
+      chain: 'ethereum',
+      language: 'solidity',
+      compilerVersion: '0.8.28',
+      metadata: {},
+    });
+    expect(result.pluginCount).toBe(1);
+    expect(result.findings).toHaveLength(1);
+    expect(result.findings[0]?.pluginId).toBe('unchecked-return');
+    expect(result.summary.high).toBe(1);
   });
 });

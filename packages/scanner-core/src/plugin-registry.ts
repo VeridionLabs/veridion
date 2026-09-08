@@ -1,4 +1,5 @@
 import { logger } from '@veridion/logger';
+import { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 
 export class PluginRegistry {
@@ -69,4 +70,11 @@ export class PluginRegistry {
   get size(): number {
     return this.plugins.size;
   }
+}
+
+/** Build the bundled rule set while keeping custom registries empty by default. */
+export function createDefaultRegistry(): PluginRegistry {
+  const registry = new PluginRegistry();
+  registry.register(new UncheckedReturnPlugin());
+  return registry;
 }

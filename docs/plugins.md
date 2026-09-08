@@ -701,6 +701,23 @@ Your tests should cover:
 
 After creating your plugin, register it so the scanner can use it.
 
+### Bundled scanner rules
+
+The scanner library exposes `createDefaultRegistry()`, which currently registers the
+`unchecked-return` rule. Use it when constructing a scanner with the bundled rules:
+
+```ts
+import { createDefaultRegistry, Scanner } from '@veridion/scanner-core';
+
+const registry = createDefaultRegistry();
+const scanner = new Scanner(registry);
+```
+
+`new PluginRegistry()` remains empty for explicitly configured rule sets. This
+factory is a library entrypoint; applications must use it at their own scanner
+construction site. See [unchecked-return](../plugins/unchecked-return/README.md)
+for the rule's scope, limitations, and focused validation commands.
+
 ### In the API
 
 Plugins are registered in the API application by importing and adding them to the `PluginRegistry`:
