@@ -112,11 +112,7 @@ function isVariableChecked(lines: string[], startIndex: number, variableName: st
   const negativeGuardPattern = new RegExp(`\\bif\\s*\\(\\s*!\\s*${escapedName}\\b`);
   const branchGuardPattern = new RegExp(`\\bif\\s*\\(\\s*${escapedName}\\b`);
 
-  for (
-    let i = startIndex;
-    i < Math.min(startIndex + CHECK_LOOKAHEAD_LINES, lines.length);
-    i++
-  ) {
+  for (let i = startIndex; i < Math.min(startIndex + CHECK_LOOKAHEAD_LINES, lines.length); i++) {
     const currentLine = stripInlineComment(lines[i] ?? '');
     if (!variablePattern.test(currentLine)) continue;
 
