@@ -4,6 +4,10 @@ import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/sca
 export class PluginRegistry {
   private plugins = new Map<string, IRulePlugin>();
 
+  constructor(initialPlugins: IRulePlugin[] = []) {
+    this.registerAll(initialPlugins);
+  }
+
   register(plugin: IRulePlugin): void {
     if (this.plugins.has(plugin.metadata.id)) {
       logger.warn({ pluginId: plugin.metadata.id }, 'Plugin already registered, overwriting');
