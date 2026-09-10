@@ -23,36 +23,36 @@ function createMockPlugin(
 
   return {
     metadata,
-    initialize: async () =\u003e {
+    initialize: async () => {
       // noop
     },
     // eslint-disable-next-line @typescript-eslint/require-await
-    analyze: async () =\u003e [],
-    getFixRecommendation: () =\u003e 'No fix needed',
-    supportsContext: (ctx) =\u003e chains.includes(ctx.chain) \u0026\u0026 languages.includes(ctx.language),
+    analyze: async () => [],
+    getFixRecommendation: () => 'No fix needed',
+    supportsContext: (ctx) => chains.includes(ctx.chain) && languages.includes(ctx.language),
   };
 }
 
-describe('PluginRegistry', () =\u003e {
+describe('PluginRegistry', () => {
   let registry: PluginRegistry;
 
-  beforeEach(() =\u003e {
+  beforeEach(() => {
     registry = new PluginRegistry();
   });
 
-  it('should register a plugin', () =\u003e {
+  it('should register a plugin', () => {
     const plugin = createMockPlugin('test-plugin');
     registry.register(plugin);
     expect(registry.size).toBe(1);
   });
 
-  it('should retrieve a registered plugin', () =\u003e {
+  it('should retrieve a registered plugin', () => {
     const plugin = createMockPlugin('test-plugin');
     registry.register(plugin);
     expect(registry.get('test-plugin')).toBe(plugin);
   });
 
-  it('should get plugins by chain', () =\u003e {
+  it('should get plugins by chain', () => {
     const ethPlugin = createMockPlugin('eth', ['ethereum']);
     const polyPlugin = createMockPlugin('poly', ['polygon']);
     registry.registerAll([ethPlugin, polyPlugin]);
@@ -71,7 +71,7 @@ describe('PluginRegistry', () =\u003e {
     expect(matching[0]!.metadata.id).toBe('eth');
   });
 
-  it('should unregister a plugin', () =\u003e {
+  it('should unregister a plugin', () => {
     const plugin = createMockPlugin('removable');
     registry.register(plugin);
     expect(registry.size).toBe(1);
@@ -79,13 +79,13 @@ describe('PluginRegistry', () =\u003e {
     expect(registry.size).toBe(0);
   });
 
-  it('should return all metadata', () =\u003e {
+  it('should return all metadata', () => {
     registry.registerAll([createMockPlugin('a'), createMockPlugin('b')]);
     const allMeta = registry.getAllMetadata();
     expect(allMeta).toHaveLength(2);
   });
 
-  it('should register only the unchecked-return default plugin', () =\u003e {
+  it('should register only the unchecked-return default plugin', () => {
     registry.registerDefaultPlugins();
     expect(registry.get('unchecked-return')?.metadata.id).toBe('unchecked-return');
     expect(registry.get('unchecked-return')?.metadata.category).toBe('UNCHECKED_RETURN');
@@ -94,8 +94,8 @@ describe('PluginRegistry', () =\u003e {
   });
 });
 
-describe('createDefaultRegistry', () =\u003e {
-  it('should instantiate a registry with unchecked-return and no sibling plugins', () =\u003e {
+describe('createDefaultRegistry', () => {
+  it('should instantiate a registry with unchecked-return and no sibling plugins', () => {
     const defaultRegistry = createDefaultRegistry();
     expect(defaultRegistry.get('unchecked-return')).toBeDefined();
     expect(defaultRegistry.get('reentrancy')).toBeUndefined();

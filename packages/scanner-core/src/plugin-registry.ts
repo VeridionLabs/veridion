@@ -3,7 +3,7 @@ import { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 
 export class PluginRegistry {
-  private plugins = new Map\u003cstring, IRulePlugin\u003e();
+  private plugins = new Map<string, IRulePlugin>();
 
   register(plugin: IRulePlugin): void {
     if (this.plugins.has(plugin.metadata.id)) {
@@ -45,18 +45,18 @@ export class PluginRegistry {
 
   getByCategory(category: string): IRulePlugin[] {
     return this.getAll().filter(
-      (p) =\u003e p.metadata.category === (category as PluginMetadata['category']),
+      (p) => p.metadata.category === (category as PluginMetadata['category']),
     );
   }
 
   getBySeverity(severity: string): IRulePlugin[] {
     return this.getAll().filter(
-      (p) =\u003e p.metadata.severity === (severity as PluginMetadata['severity']),
+      (p) => p.metadata.severity === (severity as PluginMetadata['severity']),
     );
   }
 
   getByChain(chain: string): IRulePlugin[] {
-    return this.getAll().filter((p) =\u003e
+    return this.getAll().filter((p) =>
       p.supportsContext({
         contractName: '',
         sourceCode: '',
@@ -69,11 +69,11 @@ export class PluginRegistry {
   }
 
   getMatchingPlugins(context: AnalysisContext): IRulePlugin[] {
-    return this.getAll().filter((p) =\u003e p.supportsContext(context));
+    return this.getAll().filter((p) => p.supportsContext(context));
   }
 
   getAllMetadata(): PluginMetadata[] {
-    return this.getAll().map((p) =\u003e ({ ...p.metadata }));
+  return this.getAll().map((p) => ({ ...p.metadata }));
   }
 
   get size(): number {
