@@ -21,7 +21,15 @@
   "dependencies": {
     "@veridion/logger": "workspace:*",
     "@veridion/scanner-types": "workspace:*",
-    "@veridion/shared": "workspace:*"
+    "@veridion/shared": "workspace:*",
+    "@veridion/plugin-access-control": "workspace:*",
+    "@veridion/plugin-dos": "workspace:*",
+    "@veridion/plugin-gas": "workspace:*",
+    "@veridion/plugin-oracle": "workspace:*",
+    "@veridion/plugin-overflow": "workspace:*",
+    "@veridion/plugin-randomness": "workspace:*",
+    "@veridion/plugin-reentrancy": "workspace:*",
+    "@veridion/plugin-unchecked-return": "workspace:*"
   },
   "devDependencies": {
     "@veridion/eslint-config": "workspace:*",
