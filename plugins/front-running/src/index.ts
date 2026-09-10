@@ -11,7 +11,8 @@ export class FrontRunningPlugin implements IRulePlugin {
     id: 'front-running',
     name: 'Front-Running Vulnerability Scanner',
     version: '0.1.0',
-    description: 'Detects transaction ordering dependency and priority gas auction vulnerabilities in smart contracts.',
+    description:
+      'Detects transaction ordering dependency and priority gas auction vulnerabilities in smart contracts.',
     severity: FindingSeverity.HIGH,
     category: 'FRONT_RUNNING',
     chains: ['ethereum', 'polygon', 'bsc', 'arbitrum', 'optimism', 'stellar'],
@@ -40,15 +41,17 @@ export class FrontRunningPlugin implements IRulePlugin {
         findings.push({
           pluginId: this.metadata.id,
           title: 'Potential Transaction Ordering Dependency',
-          description: 'The use of approve/transferFrom without mitigating front-running can lead to vulnerabilities.',
+          description:
+            'The use of approve/transferFrom without mitigating front-running can lead to vulnerabilities.',
           severity: FindingSeverity.HIGH,
           filePath: context.contractName,
           lineStart: i + 1,
           lineEnd: i + 1,
           codeSnippet: line.trim(),
-          recommendation: 'Use safe versions of approve or require expected amounts (e.g. increaseAllowance).',
+          recommendation:
+            'Use safe versions of approve or require expected amounts (e.g. increaseAllowance).',
           confidence: 0.6,
-          references: ['https://swcregistry.io/docs/SWC-114']
+          references: ['https://swcregistry.io/docs/SWC-114'],
         });
       }
 
@@ -57,15 +60,19 @@ export class FrontRunningPlugin implements IRulePlugin {
         findings.push({
           pluginId: this.metadata.id,
           title: 'Potential Priority Gas Auction Vulnerability',
-          description: 'Relying on gas price or block timestamp can make the contract susceptible to Priority Gas Auctions or miner manipulation.',
+          description:
+            'Relying on gas price or block timestamp can make the contract susceptible to Priority Gas Auctions or miner manipulation.',
           severity: FindingSeverity.MEDIUM,
           filePath: context.contractName,
           lineStart: i + 1,
           lineEnd: i + 1,
           codeSnippet: line.trim(),
-          recommendation: 'Avoid relying heavily on gas price or block.timestamp for critical logic.',
+          recommendation:
+            'Avoid relying heavily on gas price or block.timestamp for critical logic.',
           confidence: 0.5,
-          references: ['https://consensys.github.io/smart-contract-best-practices/development-recommendations/solidity-specific/timestamp-dependence/']
+          references: [
+            'https://consensys.github.io/smart-contract-best-practices/development-recommendations/solidity-specific/timestamp-dependence/',
+          ],
         });
       }
     }

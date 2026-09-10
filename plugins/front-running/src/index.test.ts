@@ -1,6 +1,6 @@
 import type { AnalysisContext, FindingResult } from '@veridion/scanner-types';
 import { FindingSeverity } from '@veridion/shared';
-import { beforeEach,describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FrontRunningPlugin } from './index';
 
@@ -30,7 +30,8 @@ describe('FrontRunningPlugin', () => {
   });
 
   it('should return fix recommendation', () => {
-    const recommendation = 'Use safe versions of approve or require expected amounts (e.g. increaseAllowance).';
+    const recommendation =
+      'Use safe versions of approve or require expected amounts (e.g. increaseAllowance).';
     const finding = { recommendation } as unknown as FindingResult;
     expect(plugin.getFixRecommendation(finding)).toBe(recommendation);
   });
