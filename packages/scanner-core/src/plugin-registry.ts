@@ -1,8 +1,9 @@
 import { logger } from '@veridion/logger';
+import { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 
 export class PluginRegistry {
-  private plugins = new Map<string, IRulePlugin>();
+  private plugins = new Map\u003cstring, IRulePlugin\u003e();
 
   register(plugin: IRulePlugin): void {
     if (this.plugins.has(plugin.metadata.id)) {
@@ -21,6 +22,15 @@ export class PluginRegistry {
     }
   }
 
+  /**
+   * Registers built-in plugins owned by this package's default set.
+   * Existing plugins (reentrancy, access-control, ...) stay independently
+   * composed by the application so scanner-core does not take a dependency on them.
+   */
+  registerDefaultPlugins(): void {
+    this.register(new UncheckedReturnPlugin());
+  }
+
   unregister(pluginId: string): boolean {
     return this.plugins.delete(pluginId);
   }
@@ -35,18 +45,18 @@ export class PluginRegistry {
 
   getByCategory(category: string): IRulePlugin[] {
     return this.getAll().filter(
-      (p) => p.metadata.category === (category as PluginMetadata['category']),
+      (p) =\u003e p.metadata.category === (category as PluginMetadata['category']),
     );
   }
 
   getBySeverity(severity: string): IRulePlugin[] {
     return this.getAll().filter(
-      (p) => p.metadata.severity === (severity as PluginMetadata['severity']),
+      (p) =\u003e p.metadata.severity === (severity as PluginMetadata['severity']),
     );
   }
 
   getByChain(chain: string): IRulePlugin[] {
-    return this.getAll().filter((p) =>
+    return this.getAll().filter((p) =\u003e
       p.supportsContext({
         contractName: '',
         sourceCode: '',
@@ -59,14 +69,20 @@ export class PluginRegistry {
   }
 
   getMatchingPlugins(context: AnalysisContext): IRulePlugin[] {
-    return this.getAll().filter((p) => p.supportsContext(context));
+    return this.getAll().filter((p) =\u003e p.supportsContext(context));
   }
 
   getAllMetadata(): PluginMetadata[] {
-    return this.getAll().map((p) => ({ ...p.metadata }));
+    return this.getAll().map((p) =\u003e ({ ...p.metadata }));
   }
 
   get size(): number {
     return this.plugins.size;
   }
+}
+
+export function createDefaultRegistry(): PluginRegistry {
+  const registry = new PluginRegistry();
+  registry.registerDefaultPlugins();
+  return registry;
 }
