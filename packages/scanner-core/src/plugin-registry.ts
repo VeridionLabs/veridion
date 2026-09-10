@@ -1,5 +1,23 @@
 import { logger } from '@veridion/logger';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
+import { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
+
+/**
+ * Instantiate the plugins that ship with the scanner. New built-in plugins
+ * should be added here so they are picked up by {@link createDefaultRegistry}.
+ */
+export function createBuiltinPlugins(): IRulePlugin[] {
+  return [new UncheckedReturnPlugin()];
+}
+
+/**
+ * Create a registry pre-populated with all built-in plugins.
+ */
+export function createDefaultRegistry(): PluginRegistry {
+  const registry = new PluginRegistry();
+  registry.registerAll(createBuiltinPlugins());
+  return registry;
+}
 
 export class PluginRegistry {
   private plugins = new Map<string, IRulePlugin>();
