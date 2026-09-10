@@ -73,7 +73,7 @@ export class PluginRegistry {
   }
 
   getAllMetadata(): PluginMetadata[] {
-  return this.getAll().map((p) => ({ ...p.metadata }));
+    return this.getAll().map((p) => ({ ...p.metadata }));
   }
 
   get size(): number {
