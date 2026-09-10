@@ -1,5 +1,8 @@
 import { logger } from '@veridion/logger';
+import { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
+
+export const defaultPlugins: IRulePlugin[] = [new UncheckedReturnPlugin()];
 
 export class PluginRegistry {
   private plugins = new Map<string, IRulePlugin>();
@@ -19,6 +22,10 @@ export class PluginRegistry {
     for (const plugin of plugins) {
       this.register(plugin);
     }
+  }
+
+  registerDefaultPlugins(): void {
+    this.registerAll(defaultPlugins);
   }
 
   unregister(pluginId: string): boolean {
@@ -69,4 +76,10 @@ export class PluginRegistry {
   get size(): number {
     return this.plugins.size;
   }
+}
+
+export function createDefaultRegistry(): PluginRegistry {
+  const registry = new PluginRegistry();
+  registry.registerDefaultPlugins();
+  return registry;
 }

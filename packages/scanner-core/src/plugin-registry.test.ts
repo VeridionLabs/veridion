@@ -2,7 +2,7 @@ import type { IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 import { FindingSeverity } from '@veridion/shared';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { PluginRegistry } from './plugin-registry';
+import { PluginRegistry, createDefaultRegistry } from './plugin-registry';
 
 function createMockPlugin(
   id: string,
@@ -83,5 +83,15 @@ describe('PluginRegistry', () => {
     registry.registerAll([createMockPlugin('a'), createMockPlugin('b')]);
     const allMeta = registry.getAllMetadata();
     expect(allMeta).toHaveLength(2);
+  });
+
+  it('should register default plugins', () => {
+    registry.registerDefaultPlugins();
+    expect(registry.get('unchecked-return')).toBeDefined();
+  });
+
+  it('should create default registry pre-populated with default plugins', () => {
+    const defaultRegistry = createDefaultRegistry();
+    expect(defaultRegistry.get('unchecked-return')).toBeDefined();
   });
 });
