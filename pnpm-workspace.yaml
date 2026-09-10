@@ -3,6 +3,7 @@ packages:
   - 'packages/*'
   - 'packages/config/*'
   - 'plugins/*'
+  - '!plugins/unchecked-return'
   - 'contracts/*'
   - 'examples/*'
   - 'tooling/*'

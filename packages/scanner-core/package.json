@@ -11,8 +11,8 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src/ --max-warnings 0",
-    "lint:fix": "eslint src/ --fix",
+    "lint": "eslint src/ ../../plugins/unchecked-return/src/ --max-warnings 0",
+    "lint:fix": "eslint src/ ../../plugins/unchecked-return/src/ --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@veridion/logger": "workspace:*",
-    "@veridion/plugin-unchecked-return": "workspace:*",
     "@veridion/scanner-types": "workspace:*",
     "@veridion/shared": "workspace:*"
   },
