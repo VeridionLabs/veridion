@@ -556,9 +556,33 @@ importers:
       '@veridion/logger':
         specifier: workspace:*
         version: link:../logger
+      '@veridion/plugin-access-control':
+        specifier: workspace:*
+        version: link:../../plugins/access-control
+      '@veridion/plugin-dos':
+        specifier: workspace:*
+        version: link:../../plugins/dos
       '@veridion/plugin-front-running':
         specifier: workspace:*
         version: link:../../plugins/front-running
+      '@veridion/plugin-gas':
+        specifier: workspace:*
+        version: link:../../plugins/gas
+      '@veridion/plugin-oracle':
+        specifier: workspace:*
+        version: link:../../plugins/oracle
+      '@veridion/plugin-overflow':
+        specifier: workspace:*
+        version: link:../../plugins/overflow
+      '@veridion/plugin-randomness':
+        specifier: workspace:*
+        version: link:../../plugins/randomness
+      '@veridion/plugin-reentrancy':
+        specifier: workspace:*
+        version: link:../../plugins/reentrancy
+      '@veridion/plugin-unchecked-return':
+        specifier: workspace:*
+        version: link:../../plugins/unchecked-return
       '@veridion/scanner-types':
         specifier: workspace:*
         version: link:../scanner-types
@@ -858,6 +882,34 @@ importers:
         version: 1.6.1(@types/node@20.19.43)(jsdom@24.1.3)(terser@5.50.0)
 
   plugins/reentrancy:
+    dependencies:
+      '@veridion/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@veridion/scanner-types':
+        specifier: workspace:*
+        version: link:../../packages/scanner-types
+      '@veridion/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+    devDependencies:
+      '@veridion/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/config/eslint
+      '@veridion/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/config/tsconfig
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.1
+      typescript:
+        specifier: ^5.4.5
+        version: 5.9.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.1(@types/node@20.19.43)(jsdom@24.1.3)(terser@5.50.0)
+
+  plugins/unchecked-return:
     dependencies:
       '@veridion/logger':
         specifier: workspace:*
