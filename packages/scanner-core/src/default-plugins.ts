@@ -4,6 +4,7 @@ import { PluginRegistry } from './plugin-registry';
 import {
   AccessControlPlugin,
   DosPlugin,
+  FrontRunningPlugin,
   GasPlugin,
   OraclePlugin,
   OverflowPlugin,
@@ -28,6 +29,7 @@ export function createDefaultPlugins(): IRulePlugin[] {
     new GasPlugin(),
     new OraclePlugin(),
     new RandomnessPlugin(),
+    new FrontRunningPlugin(),
   ];
 }
 

@@ -38,6 +38,8 @@ describe('PluginRegistry', () => {
 
   beforeEach(() => {
     registry = new PluginRegistry();
+    // Clear default plugins for isolated tests
+    registry.getAll().forEach((p) => registry.unregister(p.metadata.id));
   });
 
   it('should register a plugin', () => {

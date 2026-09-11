@@ -1,6 +1,5 @@
 import { logger } from '@veridion/logger';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
-
 export class PluginRegistry {
   private plugins = new Map<string, IRulePlugin>();
 
