@@ -1,13 +1,7 @@
 import { logger } from '@veridion/logger';
 import type { AnalysisContext, IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
-import { FrontRunningPlugin } from '@veridion/plugin-front-running';
-
 export class PluginRegistry {
   private plugins = new Map<string, IRulePlugin>();
-
-  constructor() {
-    this.register(new FrontRunningPlugin());
-  }
 
   register(plugin: IRulePlugin): void {
     if (this.plugins.has(plugin.metadata.id)) {

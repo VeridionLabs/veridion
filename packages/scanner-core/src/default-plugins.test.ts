@@ -15,6 +15,7 @@ describe('default plugins', () => {
     expect(ids).toContain('gas');
     expect(ids).toContain('oracle');
     expect(ids).toContain('randomness');
+    expect(ids).toContain('front-running');
     expect(new Set(ids).size).toBe(ids.length);
   });
 
@@ -32,6 +33,7 @@ describe('default plugins', () => {
     expect(registry.size).toBe(createDefaultPlugins().length);
     expect(registry.get('unchecked-return')).toBeDefined();
     expect(registry.get('reentrancy')).toBeDefined();
+    expect(registry.get('front-running')).toBeDefined();
   });
 
   it('should expose all default plugins through registry metadata', () => {

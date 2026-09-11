@@ -1,5 +1,6 @@
 export { AccessControlPlugin } from '@veridion/plugin-access-control';
 export { DosPlugin } from '@veridion/plugin-dos';
+export { FrontRunningPlugin } from '@veridion/plugin-front-running';
 export { GasPlugin } from '@veridion/plugin-gas';
 export { OraclePlugin } from '@veridion/plugin-oracle';
 export { OverflowPlugin } from '@veridion/plugin-overflow';
