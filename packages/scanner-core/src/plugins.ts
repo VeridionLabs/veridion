@@ -6,4 +6,5 @@ export { OraclePlugin } from '@veridion/plugin-oracle';
 export { OverflowPlugin } from '@veridion/plugin-overflow';
 export { RandomnessPlugin } from '@veridion/plugin-randomness';
 export { ReentrancyPlugin } from '@veridion/plugin-reentrancy';
+export { StoragePointerPlugin } from '@veridion/plugin-storage-pointer';
 export { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
