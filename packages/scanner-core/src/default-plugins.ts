@@ -10,6 +10,7 @@ import {
   OverflowPlugin,
   RandomnessPlugin,
   ReentrancyPlugin,
+  TimestampPlugin,
   UncheckedReturnPlugin,
 } from './plugins';
 
@@ -30,6 +31,7 @@ export function createDefaultPlugins(): IRulePlugin[] {
     new OraclePlugin(),
     new RandomnessPlugin(),
     new FrontRunningPlugin(),
+    new TimestampPlugin(),
   ];
 }
 
