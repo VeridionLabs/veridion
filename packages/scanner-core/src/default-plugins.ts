@@ -12,6 +12,7 @@ import {
   ReentrancyPlugin,
   TimestampPlugin,
   UncheckedReturnPlugin,
+  UpgradeProxyPlugin,
 } from './plugins';
 
 /**
@@ -32,6 +33,7 @@ export function createDefaultPlugins(): IRulePlugin[] {
     new RandomnessPlugin(),
     new FrontRunningPlugin(),
     new TimestampPlugin(),
+    new UpgradeProxyPlugin(),
   ];
 }
 
