@@ -2,7 +2,7 @@ import type { IRulePlugin, PluginMetadata } from '@veridion/scanner-types';
 import { FindingSeverity } from '@veridion/shared';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { PluginRegistry } from './plugin-registry';
+import { BUILTIN_PLUGIN_SPECIFIERS, PluginRegistry } from './plugin-registry';
 
 function createMockPlugin(
   id: string,
@@ -83,5 +83,28 @@ describe('PluginRegistry', () => {
     registry.registerAll([createMockPlugin('a'), createMockPlugin('b')]);
     const allMeta = registry.getAllMetadata();
     expect(allMeta).toHaveLength(2);
+  });
+
+  it('exposes the built-in plugin specifier catalogue', () => {
+    expect(BUILTIN_PLUGIN_SPECIFIERS['unchecked-return']).toBe('@veridion/plugin-unchecked-return');
+  });
+
+  it('registerBuiltins resolves without throwing and is idempotent', async () => {
+    const before = registry.size;
+    const added = await registry.registerBuiltins();
+
+    // Whether or not the built-in package resolves in this environment, the
+    // registry must grow by exactly the plugins that were newly added.
+    const addedIds = new Set(added.map((plugin) => plugin.metadata.id));
+    expect(registry.size).toBe(before + addedIds.size);
+    for (const plugin of added) {
+      expect(plugin.metadata.id in BUILTIN_PLUGIN_SPECIFIERS).toBe(true);
+      expect(registry.get(plugin.metadata.id)).toBe(plugin);
+    }
+
+    // Built-ins are only added once: a second pass must not add anything.
+    const secondPass = await registry.registerBuiltins();
+    expect(secondPass).toEqual([]);
+    expect(registry.size).toBe(before + addedIds.size);
   });
 });
