@@ -30,7 +30,9 @@
     "@veridion/plugin-overflow": "workspace:*",
     "@veridion/plugin-randomness": "workspace:*",
     "@veridion/plugin-reentrancy": "workspace:*",
-    "@veridion/plugin-unchecked-return": "workspace:*"
+    "@veridion/plugin-timestamp": "workspace:*",
+    "@veridion/plugin-unchecked-return": "workspace:*",
+    "@veridion/plugin-upgrade-proxy": "workspace:*"
   },
   "devDependencies": {
     "@veridion/eslint-config": "workspace:*",
