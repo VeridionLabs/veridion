@@ -30,6 +30,7 @@
     "@veridion/plugin-overflow": "workspace:*",
     "@veridion/plugin-randomness": "workspace:*",
     "@veridion/plugin-reentrancy": "workspace:*",
+    "@veridion/plugin-short-address": "workspace:*",
     "@veridion/plugin-unchecked-return": "workspace:*"
   },
   "devDependencies": {
