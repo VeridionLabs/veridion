@@ -11,16 +11,53 @@ export interface FindingSummary {
   total: number;
 }
 
+const SEVERITY_RANK: Record<FindingSeverity, number> = {
+  [FindingSeverity.CRITICAL]: 5,
+  [FindingSeverity.HIGH]: 4,
+  [FindingSeverity.MEDIUM]: 3,
+  [FindingSeverity.LOW]: 2,
+  [FindingSeverity.GAS]: 1,
+  [FindingSeverity.INFORMATIONAL]: 0,
+};
+
 export class ResultAggregator {
+  deduplicateFindings(findings: FindingResult[]): FindingResult[] {
+    const map = new Map<string, FindingResult>();
+
+    for (const finding of findings) {
+      const category =
+        (finding as FindingResult & { category?: string }).category ?? finding.pluginId;
+      const key = `${finding.filePath}:${finding.lineStart}:${finding.lineEnd}:${category}`;
+
+      const existing = map.get(key);
+      if (!existing) {
+        map.set(key, finding);
+        continue;
+      }
+
+      const existingRank = SEVERITY_RANK[existing.severity] ?? -1;
+      const newRank = SEVERITY_RANK[finding.severity] ?? -1;
+
+      if (newRank > existingRank) {
+        map.set(key, finding);
+      } else if (newRank === existingRank && finding.confidence > existing.confidence) {
+        map.set(key, finding);
+      }
+    }
+
+    return Array.from(map.values());
+  }
+
   summarize(findings: FindingResult[]): FindingSummary {
+    const deduped = this.deduplicateFindings(findings);
     return {
-      critical: this.countBySeverity(findings, FindingSeverity.CRITICAL),
-      high: this.countBySeverity(findings, FindingSeverity.HIGH),
-      medium: this.countBySeverity(findings, FindingSeverity.MEDIUM),
-      low: this.countBySeverity(findings, FindingSeverity.LOW),
-      gas: this.countBySeverity(findings, FindingSeverity.GAS),
-      informational: this.countBySeverity(findings, FindingSeverity.INFORMATIONAL),
-      total: findings.length,
+      critical: this.countBySeverity(deduped, FindingSeverity.CRITICAL),
+      high: this.countBySeverity(deduped, FindingSeverity.HIGH),
+      medium: this.countBySeverity(deduped, FindingSeverity.MEDIUM),
+      low: this.countBySeverity(deduped, FindingSeverity.LOW),
+      gas: this.countBySeverity(deduped, FindingSeverity.GAS),
+      informational: this.countBySeverity(deduped, FindingSeverity.INFORMATIONAL),
+      total: deduped.length,
     };
   }
 

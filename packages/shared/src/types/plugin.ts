@@ -57,4 +57,5 @@ export interface FindingResult {
   recommendation: string;
   confidence: number;
   references: string[];
+  category?: PluginCategory | string;
 }
