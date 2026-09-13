@@ -1,3 +1,4 @@
+import { InjectQueue } from '@nestjs/bullmq';
 import {
   BadRequestException,
   ForbiddenException,
@@ -5,9 +6,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { logger } from '@veridion/logger';
+import type { Queue } from 'bullmq';
 
 import { CacheService } from '../../common/cache/cache.service';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { AUDIT_QUEUE_NAME, type ScanAuditJobData } from './audits.queue';
 import type { AuditQueryDto, CreateAuditDto } from './dto/audit.dto';
 
 type AuditListResult = {
@@ -27,6 +30,7 @@ export class AuditsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
+    @InjectQueue(AUDIT_QUEUE_NAME) private readonly scanQueue: Queue<ScanAuditJobData>,
   ) {}
 
   async create(userId: string, dto: CreateAuditDto) {
@@ -45,6 +49,25 @@ export class AuditsService {
     await this.cache.invalidateByPrefix(this.auditCachePrefix(userId));
     await this.cache.invalidate(`project:${userId}:${dto.projectId}`);
     logger.info({ auditId: audit.id, projectId: dto.projectId }, 'Audit created');
+
+    // Enqueue async scan job
+    await this.scanQueue.add(
+      'scan-audit',
+      {
+        auditId: audit.id,
+        projectId: dto.projectId,
+        sourceCode: dto.sourceCode,
+        contractPath: dto.contractPath,
+      },
+      {
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 5_000 },
+        removeOnComplete: { age: 24 * 3600 },
+        removeOnFail: { age: 7 * 24 * 3600 },
+      },
+    );
+
+    logger.info({ auditId: audit.id }, 'Scan job enqueued');
 
     return audit;
   }
