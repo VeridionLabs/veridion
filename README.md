@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-0.1.0-blueviolet" alt="Version">
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <img src="https://img.shields.io/badge/status-active-success" alt="Status">
 </p>
 
