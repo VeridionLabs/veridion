@@ -16,7 +16,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-slot": "^1.3.3",
     "@veridion/shared": "workspace:*",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

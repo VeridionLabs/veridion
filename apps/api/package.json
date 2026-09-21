@@ -28,7 +28,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.9",
     "@nestjs/swagger": "^7.3.1",
-    "@nestjs/throttler": "^6.5.0",
+    "@nestjs/throttler": "^6.7.0",
     "@prisma/client": "^5.14.0",
     "@stellar/stellar-sdk": "^15.1.0",
     "@veridion/ai-engine": "workspace:*",
@@ -43,7 +43,7 @@
     "bcryptjs": "^2.4.3",
     "bullmq": "^5.7.8",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
+    "class-validator": "^0.15.1",
     "helmet": "^7.1.0",
     "ioredis": "^5.4.1",
     "passport": "^0.7.0",
@@ -65,8 +65,8 @@
     "@veridion/eslint-config": "workspace:*",
     "@veridion/tsconfig": "workspace:*",
     "eslint": "^8.57.0",
-    "jest": "^30.4.2",
-    "ts-jest": "^29.1.4",
+    "jest": "^30.5.2",
+    "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }
