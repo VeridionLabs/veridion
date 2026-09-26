@@ -16,6 +16,8 @@ describe('default plugins', () => {
     expect(ids).toContain('oracle');
     expect(ids).toContain('randomness');
     expect(ids).toContain('front-running');
+    expect(ids).toContain('timestamp');
+    expect(ids).toContain('upgrade-proxy');
     expect(new Set(ids).size).toBe(ids.length);
   });
 

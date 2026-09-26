@@ -6,4 +6,6 @@ export { OraclePlugin } from '@veridion/plugin-oracle';
 export { OverflowPlugin } from '@veridion/plugin-overflow';
 export { RandomnessPlugin } from '@veridion/plugin-randomness';
 export { ReentrancyPlugin } from '@veridion/plugin-reentrancy';
+export { TimestampPlugin } from '@veridion/plugin-timestamp';
 export { UncheckedReturnPlugin } from '@veridion/plugin-unchecked-return';
+export { UpgradeProxyPlugin } from '@veridion/plugin-upgrade-proxy';
