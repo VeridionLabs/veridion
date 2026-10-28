@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc && shx cp -r src/generated dist/generated",
+    "build": "prisma generate && tsc && shx cp -r src/generated dist/generated",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/ --max-warnings 0",
     "lint:fix": "eslint src/ --fix",
