@@ -11,16 +11,18 @@
     "lint": "eslint src/ --max-warnings 0",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@solidity-parser/parser": "^0.20.0",
     "@veridion/scanner-types": "workspace:*",
-    "@veridion/shared": "workspace:*",
-    "@veridion/logger": "workspace:*"
+    "@veridion/shared": "workspace:*"
   },
   "devDependencies": {
     "@veridion/eslint-config": "workspace:*",
     "@veridion/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
