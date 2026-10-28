@@ -57,7 +57,8 @@
     "commitlint": "commitlint --edit",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo build --filter='./packages/*' && changeset publish"
+    "release": "turbo build --filter='./packages/*' && changeset publish",
+    "postinstall": "prisma generate --schema=packages/database/prisma/schema.prisma"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
