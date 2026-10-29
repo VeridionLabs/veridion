@@ -5,7 +5,7 @@
   "description": "Veridion API - NestJS backend",
   "scripts": {
     "dev": "node node_modules/@nestjs/cli/bin/nest.js start --watch",
-    "build": "esbuild src/main.ts --bundle --platform=node --target=node20 --format=cjs --conditions=node --external:@prisma/client --external:.prisma/client --external:@nestjs/microservices --external:@nestjs/websockets --external:@nestjs/websockets/* --outfile=dist/main.js",
+    "build": "esbuild src/main.ts --bundle --platform=node --target=node20 --format=cjs --external:@prisma/client --external:.prisma/client --external:@nestjs/microservices --external:@nestjs/websockets --external:@nestjs/websockets/* --external:class-transformer --external:class-validator --outfile=dist/main.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
