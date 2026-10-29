@@ -121,7 +121,7 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1
       class-validator:
-        specifier: ^0.14.1
+        specifier: ^0.14.4
         version: 0.14.4
       express:
         specifier: ^4.22.1
