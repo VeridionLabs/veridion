@@ -8,7 +8,7 @@ import { AppModule } from './app.module';
 import { validateEnv } from './config/validation';
 
 async function bootstrap() {
-  // Validate environment variables on startup.
+  // Validate environment variables on startup and production.
   const env = validateEnv();
   process.env.PORT = String(env.PORT);
 
