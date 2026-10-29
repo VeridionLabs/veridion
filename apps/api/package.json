@@ -5,8 +5,7 @@
   "description": "Veridion API - NestJS backend",
   "scripts": {
     "dev": "node node_modules/@nestjs/cli/bin/nest.js start --watch",
-    "build": "nest build",
-    "start": "node --env-file=../../.env dist/main.js",
+    "build": "esbuild src/main.ts --bundle --platform=node --target=node20 --format=cjs --external:@prisma/client --external:.prisma/client --outfile=dist/main.js",
     "start:prod": "node --env-file=../../.env dist/main.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
@@ -65,6 +64,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@veridion/eslint-config": "workspace:*",
     "@veridion/tsconfig": "workspace:*",
+    "esbuild": "^0.21.0",
     "eslint": "^8.57.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.1.4",
