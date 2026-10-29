@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "node node_modules/@nestjs/cli/bin/nest.js start --watch",
     "build": "nest build",
-    "start": "node dist/main",
-    "start:prod": "node dist/main",
+    "start": "node --env-file=../../.env dist/main.js",
+    "start:prod": "node --env-file=../../.env dist/main.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",

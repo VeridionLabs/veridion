@@ -53,6 +53,13 @@ async function bootstrap() {
 }
 
 bootstrap().catch((error) => {
-  logger.error({ error }, 'Failed to start API server');
-  process.exit(1);
+logger.error(
+{
+errorMessage: error instanceof Error ? error.message : String(error),
+errorStack: error instanceof Error ? error.stack : undefined,
+},
+'Failed to start API server',
+);
+process.exit(1);
 });
+
