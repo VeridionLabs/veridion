@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
   Address,
   BASE_FEE,
@@ -43,24 +42,19 @@ export class SorobanClient {
   private readonly maxRetries: number;
   private readonly pollIntervalMs: number;
 
-  constructor(private readonly config: ConfigService) {
-    const rpcUrl = this.config.get<string>(
-      'STELLAR_RPC_URL',
-      'https://soroban-testnet.stellar.org',
-    );
+  constructor() {
+    const rpcUrl = process.env.STELLAR_RPC_URL ?? 'https://soroban-testnet.stellar.org';
     this.server = new rpc.Server(rpcUrl);
     this.networkPassphrase = this.getNetworkPassphrase(
-      this.config.get<string>('STELLAR_NETWORK', 'TESTNET'),
+      process.env.STELLAR_NETWORK ?? 'TESTNET',
     );
-    this.auditRegistryContractId = this.config.get<string>(
-      'STELLAR_AUDIT_REGISTRY_CONTRACT_ID',
-      'CDZLMOM3IPXG7FFHMVYGR3LFU6L36WQAMXGCRY2BYHSRCYRYAOVYPIWL',
-    );
-    this.verifierContractId = this.config.get<string>(
-      'STELLAR_VERIFIER_CONTRACT_ID',
-      'CBCMGBNKFABLSPUFR2D344HC6Z42C5FTLOZUTA3PCIYYE45AVD3RI5OP',
-    );
-    this.secretKey = this.config.get<string>('STELLAR_SECRET_KEY');
+    this.auditRegistryContractId =
+      process.env.STELLAR_AUDIT_REGISTRY_CONTRACT_ID ??
+      'CDZLMOM3IPXG7FFHMVYGR3LFU6L36WQAMXGCRY2BYHSRCYRYAOVYPIWL';
+    this.verifierContractId =
+      process.env.STELLAR_VERIFIER_CONTRACT_ID ??
+      'CBCMGBNKFABLSPUFR2D344HC6Z42C5FTLOZUTA3PCIYYE45AVD3RI5OP';
+    this.secretKey = process.env.STELLAR_SECRET_KEY;
     this.maxRetries = this.getPositiveNumber('STELLAR_MAX_RETRIES', 3);
     this.pollIntervalMs = this.getPositiveNumber('STELLAR_POLL_INTERVAL_MS', 3000);
   }
@@ -78,7 +72,6 @@ export class SorobanClient {
   }
 
   verifyAudit(params: VerifyAuditParams): Promise<SorobanTransactionResult> {
-    // The deployed verifier contract exposes `verify`, which records the report hash.
     return this.invoke(this.verifierContractId, 'verify', params.auditor, [
       nativeToScVal(params.auditId, { type: 'string' }),
       nativeToScVal(params.reportHash, { type: 'string' }),
@@ -89,12 +82,6 @@ export class SorobanClient {
     _contractAddress: string,
   ): Promise<{ badge_level: string; security_score: number; issued_at: number } | null> {
     try {
-      // For now, return null to indicate no on-chain badge data
-      // In production, this would use the Soroban RPC to query the contract
-      // The actual implementation would involve:
-      // 1. Building a read-only transaction
-      // 2. Simulating it via server.simulateTransaction
-      // 3. Parsing the XDR result
       return null;
     } catch (error) {
       console.error('Failed to get badge from blockchain:', error);
@@ -205,7 +192,8 @@ export class SorobanClient {
   }
 
   private getPositiveNumber(name: string, fallback: number): number {
-    const value = Number(this.config.get<string | number>(name, fallback));
+    const val = process.env[name];
+    const value = val !== undefined ? Number(val) : fallback;
     return Number.isFinite(value) && value > 0 ? value : fallback;
   }
 }
