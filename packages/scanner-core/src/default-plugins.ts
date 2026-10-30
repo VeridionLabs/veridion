@@ -10,6 +10,7 @@ import {
   OverflowPlugin,
   RandomnessPlugin,
   ReentrancyPlugin,
+  TimestampPlugin,
   UncheckedReturnPlugin,
 } from './plugins';
 
@@ -22,6 +23,7 @@ import {
 export function createDefaultPlugins(): IRulePlugin[] {
   return [
     new ReentrancyPlugin(),
+    new TimestampPlugin(),
     new AccessControlPlugin(),
     new OverflowPlugin(),
     new UncheckedReturnPlugin(),
