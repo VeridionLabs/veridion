@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ApiKeyStrategy } from './strategies/api-key.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { PrismaModule } from '../../common/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         },
       }),
     }),
+    PrismaModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, ApiKeyStrategy],
