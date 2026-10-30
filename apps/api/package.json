@@ -5,7 +5,7 @@
   "description": "Veridion API - NestJS backend",
   "scripts": {
     "dev": "node node_modules/@nestjs/cli/bin/nest.js start --watch",
-    "build": "esbuild src/main.ts --bundle --platform=node --target=node20 --format=cjs --external:@prisma/client --external:.prisma/client --external:@nestjs/microservices --external:@nestjs/websockets --external:@nestjs/websockets/* --external:class-transformer --external:class-validator --outfile=dist/main.js",
+    "build": "esbuild src/main.ts --bundle --platform=node --target=node20 --format=cjs --external:@prisma/client --external:.prisma/client --external:@nestjs/microservices --external:@nestjs/websockets --external:@nestjs/websockets/* --external:class-transformer --external:class-validator --outfile=dist/main.js && node -e \"const fs=require('fs'); const path=require('path'); const src=path.join(__dirname, '../../packages/database/src/generated/client/libquery_engine-rhel-openssl-3.0.x.so.node'); const dest=path.join(__dirname, 'dist/libquery_engine-rhel-openssl-3.0.x.so.node'); if(fs.existsSync(src)){ fs.copyFileSync(src, dest); console.log('Prisma query engine copied successfully!'); } else { console.warn('Warning: Prisma engine binary not found at', src); }\"",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
