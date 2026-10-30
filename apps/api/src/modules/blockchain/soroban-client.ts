@@ -45,9 +45,7 @@ export class SorobanClient {
   constructor() {
     const rpcUrl = process.env.STELLAR_RPC_URL ?? 'https://soroban-testnet.stellar.org';
     this.server = new rpc.Server(rpcUrl);
-    this.networkPassphrase = this.getNetworkPassphrase(
-      process.env.STELLAR_NETWORK ?? 'TESTNET',
-    );
+    this.networkPassphrase = this.getNetworkPassphrase(process.env.STELLAR_NETWORK ?? 'TESTNET');
     this.auditRegistryContractId =
       process.env.STELLAR_AUDIT_REGISTRY_CONTRACT_ID ??
       'CDZLMOM3IPXG7FFHMVYGR3LFU6L36WQAMXGCRY2BYHSRCYRYAOVYPIWL';

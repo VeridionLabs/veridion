@@ -27,19 +27,31 @@ jest.mock('@stellar/stellar-sdk', () => {
   };
 });
 
-import { ConfigService } from '@nestjs/config';
-
 import { SorobanClient } from './soroban-client';
 
 describe('SorobanClient', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    // SorobanClient reads its configuration straight from process.env, so the
+    // test arranges the environment rather than injecting a ConfigService.
+    process.env = {
+      ...originalEnv,
+      STELLAR_SECRET_KEY: 'secret',
+      STELLAR_NETWORK: 'TESTNET',
+    };
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
+  });
+
   it('builds and confirms register_audit through the audit registry', async () => {
     const sdk: {
       Contract: jest.Mock;
       rpc: { Server: jest.Mock };
     } = jest.requireMock('@stellar/stellar-sdk');
-    const client = new SorobanClient(
-      new ConfigService({ STELLAR_SECRET_KEY: 'secret', STELLAR_NETWORK: 'TESTNET' }),
-    );
+    const client = new SorobanClient();
     const server = sdk.rpc.Server.mock.results[0]?.value;
 
     await expect(
