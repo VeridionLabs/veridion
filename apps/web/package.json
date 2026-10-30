@@ -16,8 +16,8 @@
     "clean": "rm -rf .next dist"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.6.0",
     "@monaco-editor/react": "^4.6.0",
-    "monaco-editor": "~0.54.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -41,6 +41,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
     "lucide-react": "^0.378.0",
+    "monaco-editor": "~0.54.0",
     "next": "^14.2.3",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
@@ -48,18 +49,18 @@
     "react-hook-form": "^7.51.5",
     "recharts": "^2.12.7",
     "sonner": "^1.4.41",
+    "styled-jsx": "^5.1.7",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8",
-    "@hookform/resolvers": "^3.6.0"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.45.0",
     "@types/node": "^20.12.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@veridion/eslint-config": "workspace:*",
     "@veridion/tsconfig": "workspace:*",
-    "@playwright/test": "^1.45.0",
     "autoprefixer": "^10.4.19",
     "jsdom": "^24.1.0",
     "postcss": "^8.4.38",
