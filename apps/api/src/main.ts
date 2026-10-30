@@ -2,7 +2,10 @@ import * as path from 'path';
 
 // Force Prisma to load the query engine library directly from the output bundle directory
 if (process.env.NODE_ENV === 'production') {
-  process.env.PRISMA_QUERY_ENGINE_LIBRARY = path.join(__dirname, 'libquery_engine-rhel-openssl-3.0.x.so.node');
+  process.env.PRISMA_QUERY_ENGINE_LIBRARY = path.join(
+    __dirname,
+    'libquery_engine-rhel-openssl-3.0.x.so.node',
+  );
 }
 
 import 'reflect-metadata';
@@ -66,13 +69,12 @@ async function bootstrap() {
 }
 
 bootstrap().catch((error) => {
-logger.error(
-{
-errorMessage: error instanceof Error ? error.message : String(error),
-errorStack: error instanceof Error ? error.stack : undefined,
-},
-'Failed to start API server',
-);
-process.exit(1);
+  logger.error(
+    {
+      errorMessage: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined,
+    },
+    'Failed to start API server',
+  );
+  process.exit(1);
 });
-
