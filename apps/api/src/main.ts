@@ -1,3 +1,10 @@
+import * as path from 'path';
+
+// Force Prisma to use the bundled binary in production serverless environments
+if (process.env.NODE_ENV === 'production') {
+  process.env.PRISMA_QUERY_ENGINE_BINARY = path.join(__dirname, 'libquery_engine-rhel-openssl-3.0.x.so.node');
+}
+
 import 'reflect-metadata';
 import 'class-transformer';
 import 'class-validator';
