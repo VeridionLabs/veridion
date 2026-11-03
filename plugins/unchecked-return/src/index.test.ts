@@ -1,399 +1,319 @@
-import type { AnalysisContext } from '@veridion/scanner-types';
+import type {
+  AnalysisContext,
+  IRulePlugin,
+} from '@veridion/scanner-types';
 import { describe, expect, it } from 'vitest';
 
 import { UncheckedReturnPlugin } from './index';
 
-describe('UncheckedReturnPlugin', () => {
-  const plugin = new UncheckedReturnPlugin();
-
-  const createContext = (sourceCode: string): AnalysisContext => ({
+function context(sourceCode: string): AnalysisContext {
+  return {
     contractName: 'Test',
     sourceCode,
     chain: 'ethereum',
     language: 'solidity',
     compilerVersion: '0.8.19',
     metadata: {},
-  });
-
-  describe('metadata', () => {
-    it('should have correct metadata', () => {
-      expect(plugin.metadata.id).toBe('unchecked-return');
-      expect(plugin.metadata.name).toBe('Unchecked Return Value Detector');
-      expect(plugin.metadata.version).toBe('1.0.0');
-      expect(plugin.metadata.severity).toBe('HIGH');
-      expect(plugin.metadata.category).toBe('UNCHECKED_RETURN');
-      expect(plugin.metadata.languages).toContain('solidity');
-      expect(plugin.metadata.tags).toContain('unchecked-return');
-    });
-
-    it('should have references defined', () => {
-      expect(plugin.metadata.references?.length).toBeGreaterThan(0);
-    });
-  });
-
-  describe('supportsContext', () => {
-    it('should support solidity on ethereum', () => {
-      expect(plugin.supportsContext(createContext(''))).toBe(true);
-    });
-
-    it('should support other configured chains', () => {
-      expect(plugin.supportsContext({ ...createContext(''), chain: 'polygon' })).toBe(true);
-    });
-
-    it('should not support unsupported chains', () => {
-      expect(plugin.supportsContext({ ...createContext(''), chain: 'solana' })).toBe(false);
-    });
-
-    it('should not support unsupported languages', () => {
-      expect(plugin.supportsContext({ ...createContext(''), language: 'vyper' })).toBe(false);
-    });
-  });
-
-  describe('detection', () => {
-    it('should detect unchecked address.call()', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Vulnerable {
-    function ping(address target) external {
-        target.call(abi.encodeWithSignature("foo()"));
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(1);
-      expect(findings[0]?.title).toContain('address.call()');
-      expect(findings[0]?.severity).toBe('HIGH');
-      expect(findings[0]?.lineStart).toBe(5);
-    });
-
-    it('should detect unchecked address.send()', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Vulnerable {
-    function payout(address payable recipient) external payable {
-        recipient.send(msg.value);
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(1);
-      expect(findings[0]?.title).toContain('address.send()');
-    });
-
-    it('should detect unchecked address.delegatecall() with CRITICAL severity', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Proxy {
-    function forward(address logic, bytes memory data) external {
-        logic.delegatecall(data);
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(1);
-      expect(findings[0]?.title).toContain('address.delegatecall()');
-      expect(findings[0]?.severity).toBe('CRITICAL');
-    });
-
-    it('should detect unchecked call with value options', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Vulnerable {
-    function withdraw(address payable to, uint amount) external {
-        to.call{value: amount}("");
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(1);
-      expect(findings[0]?.codeSnippet).toContain('call{value: amount}');
-    });
-
-    it('should detect multiple unchecked calls in one contract', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Vulnerable {
-    event Done();
-
-    function two(address a, address b) external {
-        a.call("");
-        b.send(1 ether);
-        emit Done();
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(2);
-    });
-
-    it('should report correct pluginId and references', async () => {
-      const code = `
-contract Vulnerable {
-    function f(address a) external {
-        a.call("");
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(1);
-      expect(findings[0]?.pluginId).toBe('unchecked-return');
-      expect(findings[0]?.references.length).toBeGreaterThan(0);
-    });
-  });
-
-  describe('checked code (no findings)', () => {
-    it('should not flag call result captured and required', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Safe {
-    function withdraw(address payable to, uint amount) external {
-        (bool success, ) = to.call{value: amount}("");
-        require(success, "Transfer failed");
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-
-    it('should not flag send result stored in bool variable', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Safe {
-    function payout(address payable to) external payable {
-        bool ok = to.send(msg.value);
-        require(ok);
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-
-    it('should not flag call result used in if condition', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Safe {
-    function tryCall(address a) external {
-        if (a.call(abi.encodeWithSignature("foo()"))) {
-            // handle success
-        }
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-
-    it('should not flag call result used in require condition', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Safe {
-    function tryCall(address a) external {
-        require(a.call(abi.encodeWithSignature("foo()")), "call failed");
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-
-    it('should not flag result assigned to existing variable', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Safe {
-    function tryCall(address a) external {
-        bool ok;
-        ok = a.call("");
-        require(ok);
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-
-    it('should not flag delegatecall result captured and required', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Proxy {
-    function forward(address logic, bytes memory data) external {
-        (bool success, ) = logic.delegatecall(data);
-        require(success, "Delegatecall failed");
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-
-    it('should not flag calls wrapped in return', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Safe {
-    function tryCall(address a) external returns (bool) {
-        return a.call("");
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-
-    it('should not flag calls mentioned in comments', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Safe {
-    function f(address a) external {
-        // a.call("") is dangerous when unchecked
-        // a.send(1 ether) too
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-  });
-
-  describe('edge cases', () => {
-    it('should return no findings for empty contract', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Empty {}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(0);
-    });
-
-    it('should return no findings for empty source', async () => {
-      const findings = await plugin.analyze(createContext(''));
-
-      expect(findings).toEqual([]);
-    });
-
-    it('should handle multi-line call statements', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Vulnerable {
-    function f(address payable to, uint amount) external {
-        to.call{value: amount}(
-            abi.encodeWithSignature("transfer(uint256,uint256)", 1, 2)
-        );
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(1);
-      expect(findings[0]?.lineStart).toBe(5);
-    });
-
-    it('should handle calls on struct members and mappings', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-contract Vulnerable {
-    struct Recipient { address payable account; }
-    mapping(uint => Recipient) recipients;
-
-    function f(uint i) external {
-        recipients[i].account.call("");
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-
-      expect(findings.length).toBe(1);
-    });
-
-    it('should not flag non-address calls like ERC20 transfer', async () => {
-      const code = `
-pragma solidity ^0.8.0;
-interface IERC20 {
-    function transfer(address to, uint amount) external returns (bool);
+  };
 }
-contract Safe {
-    IERC20 token;
-    function f(address to, uint amount) external {
-        token.transfer(to, amount);
-    }
+
+function source(body: string): string {
+  return `pragma solidity ^0.8.19;
+contract Test {
+  event Result(bool success);
+  function run(
+    address payable target,
+    bytes memory data,
+    uint256 amount
+  ) external payable {
+    ${body}
+  }
 }`;
+}
 
-      const findings = await plugin.analyze(createContext(code));
+const plugin = new UncheckedReturnPlugin();
 
-      expect(findings.length).toBe(0);
+async function analyze(body: string) {
+  return plugin.analyze(context(source(body)));
+}
+
+describe('UncheckedReturnPlugin', () => {
+  it('implements IRulePlugin and exposes metadata', async () => {
+    const rule: IRulePlugin = plugin;
+
+expect(rule.metadata).toMatchObject({
+      id: 'unchecked-return',
+      category: 'UNCHECKED_RETURN',
+      severity: 'HIGH',
+    });
+    expect(rule.metadata.references).not.toHaveLength(0);
+
+await expect(rule.initialize()).resolves.toBeUndefined();
+    await expect(rule.initialize({ enabled: true })).resolves.toBeUndefined();
+  });
+
+it.each([
+    'ethereum',
+    'polygon',
+    'bsc',
+    'avalanche',
+    'arbitrum',
+    'optimism',
+  ])('supports Solidity on %s', (chain) => {
+    expect(plugin.supportsContext({ ...context(''), chain })).toBe(true);
+  });
+
+it.each([
+    { chain: 'solana', language: 'solidity' },
+    { chain: 'ethereum', language: 'vyper' },
+  ])('rejects unsupported contexts: %o', async (overrides) => {
+    const input = { ...context(source('target.call(data);')), ...overrides };
+
+expect(plugin.supportsContext(input)).toBe(false);
+    await expect(plugin.analyze(input)).resolves.toEqual([]);
+  });
+
+it.each(['', '   \n', 'contract Empty {}'])(
+    'handles empty input: %j',
+    async (input) => {
+      await expect(plugin.analyze(context(input))).resolves.toEqual([]);
+    },
+  );
+
+it('rejects malformed Solidity rather than reporting a clean scan', async () => {
+    await expect(
+      plugin.analyze(context('contract Broken { function')),
+    ).rejects.toThrow();
+  });
+
+describe('unchecked calls', () => {
+    it.each([
+      ['target.call(data);', 'call', 'HIGH'],
+      ['target.send(amount);', 'send', 'HIGH'],
+      ['target.delegatecall(data);', 'delegatecall', 'CRITICAL'],
+      ['target.call{value: amount}(data);', 'call', 'HIGH'],
+      ['target.call{gas: 50000, value: amount}(data);', 'call', 'HIGH'],
+      ['target.delegatecall{gas: 50000}(data);', 'delegatecall', 'CRITICAL'],
+      ['target . call (data);', 'call', 'HIGH'],
+      ['payable(target).send(amount);', 'send', 'HIGH'],
+    ])('detects %s', async (body, method, severity) => {
+      const findings = await analyze(body);
+
+expect(findings).toHaveLength(1);
+      expect(findings[0]).toMatchObject({
+        pluginId: 'unchecked-return',
+        title: `Unchecked Return Value from address.${method}()`,
+        severity,
+        filePath: 'Test.sol',
+      });
     });
 
-    it('should not flag unused-address warnings as findings (no crash on odd formatting)', async () => {
-      const code = `
-contract T {
-  function f(address a) public { a . call ( "" ) ; }
+it.each([
+      '(bool success, ) = target.call(data);',
+      'bool success = target.send(amount);',
+      '(bool success, ) = target.delegatecall(data);',
+      '(, bytes memory result) = target.call(data);',
+      'bool success; (success, ) = target.call(data);',
+      'bool success; success = target.send(amount);',
+      'bytes memory result; (, result) = target.call(data);',
+      'bool success = target.send(amount); emit Result(success);',
+      'bool success = target.send(amount); require(amount > 0);',
+      'bool success = target.send(amount); require(success || true);',
+      'require(amount > 0, string(abi.encode(target.send(amount))));',
+    ])('does not confuse assignment or unrelated use with a check: %s', async (body) => {
+      expect(await analyze(body)).toHaveLength(1);
+    });
+
+it('analyzes each call independently on the same line', async () => {
+      const findings = await analyze(
+        'require(target.send(amount)); target.send(amount); target.call(data);',
+      );
+
+expect(findings).toHaveLength(2);
+      expect(findings[0]?.title).toContain('.send()');
+      expect(findings[1]?.title).toContain('.call()');
+    });
+
+it.each([
+      'success = true;',
+      'delete success;',
+      'if (amount > 0) { success = false; }',
+      '{ bool success = true; require(success); }',
+      'return;',
+      'if (amount > 0) return;',
+      'revert("stop");',
+    ])('does not accept a later check after invalidation: %s', async (middle) => {
+      const findings = await analyze(`
+        bool success = target.send(amount);
+        ${middle}
+        require(success);
+      `);
+
+expect(findings).toHaveLength(1);
+    });
+
+it('does not use a stale check for a later call', async () => {
+      expect(
+        await analyze(`
+          bool success = true;
+          require(success);
+          success = target.send(amount);
+        `),
+      ).toHaveLength(1);
+    });
+
+it('does not use a check in another function', async () => {
+      const input = `contract Test {
+        function first(address payable target) external {
+          bool success = target.send(1);
+        }
+        function second(bool success) external {
+          require(success);
+        }
+      }`;
+
+expect(await plugin.analyze(context(input))).toHaveLength(1);
+    });
+
+it('reports multiline source locations and original snippets', async () => {
+      const input = `contract Test {
+function run(address target) external {
+target.call(
+  ""
+);
+}
 }`;
 
-      const findings = await plugin.analyze(createContext(code));
+const findings = await plugin.analyze(context(input));
 
-      expect(findings.length).toBe(1);
+expect(findings).toHaveLength(1);
+      expect(findings[0]).toMatchObject({
+        lineStart: 3,
+        lineEnd: 5,
+        codeSnippet: 'target.call(\n  ""\n)',
+      });
+    });
+
+it('limits long code snippets', async () => {
+      const findings = await analyze(`target.call("${'a'.repeat(300)}");`);
+
+expect(findings[0]?.codeSnippet).toHaveLength(200);
     });
   });
 
-  describe('getFixRecommendation', () => {
-    it('should provide a require(success) pattern fix recommendation', async () => {
-      const code = `
-contract Vulnerable {
-    function f(address a) external {
-        a.call("");
-    }
-}`;
-
-      const findings = await plugin.analyze(createContext(code));
-      const finding = findings[0];
-      expect(finding).toBeDefined();
-      if (!finding) return;
-
-      const fix = plugin.getFixRecommendation(finding);
-
-      expect(fix).toContain('require(success');
-      expect(fix).toContain('bool success');
+describe('handled results', () => {
+    it.each([
+      'require(target.send(amount));',
+      'assert(target.send(amount));',
+      'if (!target.send(amount)) { revert("failed"); }',
+      'bool success = target.send(amount); require(success);',
+      'bool success = target.send(amount); assert(success);',
+      'bool success = target.send(amount); require(success == true);',
+      'bool success = target.send(amount); require(true == success);',
+      'bool success = target.send(amount); require(success != false);',
+      'bool success = target.send(amount); if (!success) revert("failed");',
+      '(bool success, ) = target.call(data); require(success);',
+      '(bool success, ) = target.delegatecall(data); require(success);',
+      'bool success; success = target.send(amount); require(success);',
+      'bool success; (success, ) = target.call(data); require(success);',
+      '(bool success, ) = target.call{value: amount}(data); require(success);',
+      `(
+        bool success,
+        bytes memory result
+      ) =
+        target.call(data);
+      require(success);`,
+      `bool success = target.send(amount);
+       uint256 unrelated = amount;
+       require(success);`,
+    ])('accepts %s', async (body) => {
+      expect(await analyze(body)).toEqual([]);
     });
 
-    it('should include a send-specific alternative in the fix', async () => {
-      const code = `
-contract Vulnerable {
-    function f(address payable a) external {
-        a.send(1 ether);
-    }
-}`;
+it.each([
+      ['bool', 'return target.send(amount);'],
+      ['bool', 'bool success = target.send(amount); return success;'],
+      ['bool, bytes memory', 'return target.call("");'],
+      ['bool, bytes memory', 'return target.delegatecall("");'],
+    ])('accepts explicit propagation: %s / %s', async (returns, body) => {
+      const input = `contract Test {
+        function run(address payable target, uint256 amount)
+          external returns (${returns})
+        {
+          ${body}
+        }
+      }`;
 
-      const findings = await plugin.analyze(createContext(code));
-      const finding = findings[0];
-      expect(finding).toBeDefined();
-      if (!finding) return;
-
-      const fix = plugin.getFixRecommendation(finding);
-
-      expect(fix).toContain('.send(');
-      expect(fix).toContain('require(sent');
+expect(await plugin.analyze(context(input))).toEqual([]);
     });
   });
 
-  describe('initialize', () => {
-    it('should initialize without error', async () => {
-      await expect(plugin.initialize()).resolves.toBeUndefined();
-      await expect(plugin.initialize({ custom: true })).resolves.toBeUndefined();
+describe('non-code and unrelated calls', () => {
+    it('ignores comments and string literals', async () => {
+      expect(
+        await analyze(`
+          // target.call(data);
+          /*
+            target.send(amount);
+            target.delegatecall(data);
+          */
+          string memory text = "target.call(data)";
+          string memory other = 'target.send(amount)';
+        `),
+      ).toEqual([]);
+    });
+
+it('ignores native transfer and unrelated member names', async () => {
+      expect(
+        await analyze(`
+          target.transfer(amount);
+          target.staticcall(data);
+          target.callSomething(data);
+        `),
+      ).toEqual([]);
+    });
+
+it('does not include ERC20 transfer in this rule', async () => {
+      const input = `interface IERC20 {
+        function transfer(address to, uint256 amount) external returns (bool);
+      }
+      contract Test {
+        function run(IERC20 token, address to) external {
+          token.transfer(to, 1);
+        }
+      }`;
+
+expect(await plugin.analyze(context(input))).toEqual([]);
+    });
+  });
+
+describe('recommendations', () => {
+    it.each([
+      ['target.call(data);', '(bool success, ) = target.call(data);'],
+      [
+        'target.send(amount);',
+        'bool success = payable(recipient).send(amount);',
+      ],
+      [
+        'target.delegatecall(data);',
+        '(bool success, ) = target.delegatecall(data);',
+      ],
+    ])('provides a valid method-specific pattern for %s', async (body, expected) => {
+      const [finding] = await analyze(body);
+      if (!finding) throw new Error('Expected an unchecked-return finding');
+
+const fix = plugin.getFixRecommendation(finding);
+
+expect(fix).toContain(expected);
+      expect(fix).toContain('require(success,');
+      expect(fix).toContain(`Test.sol:${finding.lineStart}`);
+      expect(finding.references).toContain(
+        'https://swcregistry.io/docs/SWC-104/',
+      );
+
+if (body.includes('delegatecall')) {
+        expect(fix).not.toContain('delegatecall{value:');
+      }
     });
   });
 });
